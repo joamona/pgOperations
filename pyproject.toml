@@ -1,0 +1,22 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+[project]
+name = "pgOperations"
+version = "0.0.1"
+authors = [
+  { name="Gaspar Mora-Navarro", email="joamona@cgf.upv.es" },
+]
+description = "Simple tool to perform the most common operations in PostgreSQL and PostGIS with Psycopg2 without writing SQL code. Builds the SQL queries from Pyhton dictionaries."
+readme = "README.md"
+requires-python = ">=3.7"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: GNU General Public License (GPL)",
+    "Operating System :: OS Independent",
+    "Topic :: Database",
+]
+
+[project.urls]
+"Homepage" = "https://github.com/joamona/pgOperations"
+"Documentation" = "https://joamona.github.io/pgOperations/"

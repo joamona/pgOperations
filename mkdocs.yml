@@ -1,0 +1,23 @@
+site_name: PgOperations
+repo_url: https://github.com/joamona/pgOperations
+site_author: Gaspar Mora-Navarro
+theme:
+  name: "material"
+
+plugins:
+  - autorefs
+  - mkdocstrings:
+      default_handler: python
+
+watch:
+- src/pgOperations
+
+nav:
+  - Index: index.md
+  - Tutorials: tutorials.md
+  - How to: how-to-guides.md
+  - Reference: reference.md
+  - Explanation: explanation.md
+  
+dev_addr:
+  '127.0.0.1:8888'
