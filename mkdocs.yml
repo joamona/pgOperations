@@ -15,7 +15,6 @@ watch:
 nav:
   - Index: index.md
   - Tutorials: tutorials.md
-  - How to: how-to-guides.md
   - Reference: reference.md
   - Explanation: explanation.md
   

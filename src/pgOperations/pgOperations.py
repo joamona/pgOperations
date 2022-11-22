@@ -417,7 +417,7 @@ class WhereClause():
 
     * A string expression with this format: `'depth > %s and owner_name = %s'`. 
             This expression is stored in the `where_clause` property.
-    * The values to replace the `%s` by real value, e.g. `[25.4,"Juan Andrés"]`.
+    * The values to replace the `%s` by real values, e.g. `[25.4,"Juan Andrés"]`.
 
     The `execute` method of the `cursor` object of the `Psycopg2` library will 
     put the values into the where string expression, in the correct way. You do 
@@ -646,7 +646,7 @@ class PgOperations():
         Before the rows be deleted, the files are deleted.
 
         See an example of use in 
-        <a href="../tutorials/#delete-rows-and-files">Delete rows and files</a>.
+        <a href="../tutorials/#delete-rows-and-files" target="_blank">Delete rows and files</a>.
         
         Args:
 
@@ -957,6 +957,12 @@ class PgOperations():
         See an example of use in 
         <a href="../tutorials/#delete-rows-and-files">Delete rows and files</a>.
 
+        Examples:
+
+            >>>r=pgo.pgCreateTable(table_name_with_schema="d.customers",
+            >>>    fields_definition="gid serial, name varchar, img varchar",
+            >>>    delete_table_if_exists= True,print_query=False)
+
         Args:
 
             table_name_with_schema: The table name, including the schema, e.g. 'public.customers'.
@@ -1003,8 +1009,8 @@ class PgOperations():
 
         Args:
             table_name_with_schema: Table name included the schema. Ej. "d.linde". 
-            column_name: Column name, e.g. "username". 
-            column_value: Any value in the column. 
+            field_name: Column name, e.g. "username". 
+            field_value: Any value in the column. 
             print_query: For debugging purposes. If True will print 
                 the query and values in the function.
         
@@ -1029,7 +1035,7 @@ class PgOperations():
         return self.pgDelete(table_name=tableName, cond_where=columnName + " =%s", list_values_cond_where=[columnValue])
 
 
-class Counters:
+class PgCounters:
     """
     Counters are created as sequences, and the sequences are represented
     in the database as tables. The current value of the counters are get
@@ -1051,6 +1057,12 @@ class Counters:
     def __init__(self, pgOperations: PgOperations) -> None:
         """
         Constructor.
+
+        Examples:
+
+            >>>counter_name = 'c1'
+            >>>c=pg.PgCounters(pgo)
+            >>>c.addCounter(counter_name,counter_name + ' description')
 
         Args:
             pgOperations: PgOperations instance.

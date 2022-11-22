@@ -1,5 +1,7 @@
 # Tutorial
+
 Here you have how to start using 'PgOperations':
+
 ## Installation
 It is good practice always use Python [virtual environments](https://docs.python.org/3/library/venv.html) to install new Python libraries. Navigate to the folder where you want to create the virtual environment, for example the 'venvs' folder, and type:
 
@@ -15,6 +17,11 @@ Use [pip](https://pypi.org/project/pip/) to install the modules in the virtual e
     (pgOperations)$pip install pgOperations
 
 Now you are ready to use the library to edit data in PostgreSQL.
+
+There are mainly three classes whose methods are useful: <a href="../reference/#src.pgOperations.pgOperations.PgOperations" target="_blank">PgOperations</a>, to edit data, <a href="../reference/#src.pgOperations.pgOperations.PgCounters" target="_blank">PgCounters</a>, to manage counters and <a href="../reference/#src.pgOperations.pgOperations.PgDatabases" target="_blank">PgDatabases</a>, to manage databases. The rest of the classes are auxiliary classes
+to arrange the parameters that the useful classes need.
+
+In the bellow section you have an example of use of all the utilities.
 
 ## Create a database
 
@@ -41,7 +48,7 @@ method returns an opened PgConnect instance, connected to the new database.
 
 ## Create an example table
 Execute regular SQL code to create an scheme and a table in the `pgoperationstest` database, continuing with the previous listing. There is also an utility for creating tables. See 
-<a href="reference/#src.pgOperations.pgOperations.PgOperations.pgCreateTable" 
+<a href="../reference/#src.pgOperations.pgOperations.PgOperations.pgCreateTable" 
 target="_blank"> PgOperations.pgCreateTable</a>.
 
     pgc2.cursor.execute("create schema d")
@@ -56,7 +63,7 @@ Commit the changes and close the connections to the databases `postgres` and `pg
     pgc.disconnect()
 
 ## Edit data
-The examples in this section use the table `d.points` created in the [create a table](#create-a-table) section. This table has the fields `gid`, `description`, `deph` and `geom` fields. The `geom` field is a PostGIS <a href="http://postgis.net/workshops/postgis-intro/geometries.html/" target="_blank">geomerty</a> field type, of type `POINT` in the SRC `25831`. 
+The examples in this section use the table `d.points` created in the [create a table](#create-an-example-table) section. This table has the fields `gid`, `description`, `deph` and `geom` fields. The `geom` field is a PostGIS <a href="http://postgis.net/workshops/postgis-intro/geometries.html/" target="_blank">geomerty</a> field type, of type `POINT` in the SRC `25831`. 
 
 > **_NOTE:_**  It is not necessary to have a geometry field in the tables to use the pgOperations module.
 
@@ -69,7 +76,7 @@ a <a href="../reference/#src.pgOperations.pgOperations.PgOperations" target="_bl
             password="postgres", host="localhost", port="5432")
     pgo=pg.PgOperations(pgConnection=oCon,global_print_queries=True))
 
-**This library supposes all python dictionary keys match with the table field names**
+**This library supposes all python dictionary keys match with the table field names**.
 
 ### Insert
 
@@ -131,7 +138,7 @@ The outputs are the following:
 
 #### Example generating the expressions manually
 This example manually generates the expressions using the class 
-[FieldsAndValuesBase][src.pgOperations.pgOperations.FieldsAndValuesBase],
+<a href="../reference/#src.pgOperations.pgOperations.FieldsAndValuesBase" target="_blank">FieldsAndValuesBase</a>,
 so you are free to write the SQL sentence, for more complicated cases.
 
     fieldsAndValuesBase=pg.FieldsAndValuesBase(
@@ -280,9 +287,9 @@ The rows have to have a field with the file names to delete. The file names
 can contain an absolute path, or a relative path. It is possible to complete
 relative paths with the parameter `base_path`.
 
-see the method <a href="reference/#src.pgOperations.pgOperations.PgOperations.pgDeleteWithFiles" target="_blank"> PgOperations.pgDeleteWithFiles</a> for mor details about the parameters.
+see the method <a href="../reference/#src.pgOperations.pgOperations.PgOperations.pgDeleteWithFiles" target="_blank">PgOperations.pgDeleteWithFiles</a> for mor details about the parameters.
 
-**This method only has been tested in Linux systems**
+**This method only has been tested in Linux systems**.
 
 As an example a new table is needed. To create the new table you can use 
 the [PgOperations.createTable][src.pgOperations.pgOperations.PgOperations.pgCreateTable] utility.
@@ -324,7 +331,7 @@ This utility returns the table field names as a string or as a list. Besides
 if the table has a geometry field, e.g. `geom`, this utility can return this
 field name as `geom`, `st_astext(geom)`, `st_asgeojson(geom)`, `st_transform(st_asgeojson(geom),givenEPSG)`, or `st_transform(st_astext(geom),givenEPSG)`. The objetive is, the output of
 this function, could be used as input for the parameter `list_fields_to_select`
-of the methods <a href="reference/#src.pgOperations.pgOperations.PgOperations.pgSelect" target="_blank"> PgOperations.pgSelect</a> and <a href="reference/#src.pgOperations.pgOperations.PgOperations.pgUpdate" target="_blank"> PgOperations.pgUpdate</a> 
+of the methods <a href="../reference/#src.pgOperations.pgOperations.PgOperations.pgSelect" target="_blank"> PgOperations.pgSelect</a> and <a href="../reference/#src.pgOperations.pgOperations.PgOperations.pgUpdate" target="_blank"> PgOperations.pgUpdate</a> 
 
 It is very common not to update all the field values, as some of them are automatically set
 by the database, because they have default values, commonly `serials` or timestapm field `types`.
@@ -359,7 +366,7 @@ Result:
     Field names:  gid,depth,st_asgeojson(st_transform(geom,25831))
 
 Next example shows how to use the output of this method as input of 
-<a href="reference/#src.pgOperations.pgOperations.PgOperations.pgSelect" 
+<a href="../reference/#src.pgOperations.pgOperations.PgOperations.pgSelect" 
 target="_blank"> PgOperations.pgSelect</a>:
 
     gf=pg.SelectGeometryFormat()
@@ -386,7 +393,7 @@ Results:
 ### Table exists
 Returns True or False, depending on if the table exists in the database or not.
 table_name_with_schema: table name included the schema, e.g. "d.boundary". 
-See the <a href="reference/#src.pgOperations.pgOperations.PgOperations.pgTableExists" 
+See the <a href="../reference/#src.pgOperations.pgOperations.PgOperations.pgTableExists" 
 target="_blank"> PgOperations.pgTableExists</a> method documentation for more details:
 
 Example:
@@ -405,7 +412,7 @@ Result:
 It is very common check if a value exists in a column. For example in the case of
 users, or emails. This function returns `True` or `False`,
  depending whether or not if a value exists in a column. 
-See the <a href="reference/#src.pgOperations.pgOperations.PgOperations.pgValueExists" 
+See the <a href="../reference/#src.pgOperations.pgOperations.PgOperations.pgValueExists" 
 target="_blank"> PgOperations.pgValueExists</a> method documentation for more details:
 
 Example:
@@ -422,14 +429,15 @@ Result:
 
 ### Manage counters
 This module has a class, called 
-<a href="reference/#src.pgOperations.pgOperations.Counters" 
-target="_blank"> Counters</a> to manage counters. See the class method
+<a href="../reference/#src.pgOperations.pgOperations.PgCounters" 
+target="_blank"> PgCounters</a> to manage counters. See the class method
 documentations to get more details.
 
-This example creates a counter:
+Use the method <a href="../reference/#src.pgOperations.pgOperations.PgCounters.addCounter" 
+target="_blank"> PgCounters.addCounter</a> to create a counter:
 
     counter_name = 'c1'
-    c=pg.Counters(pgo)
+    c=pg.PgCounters(pgo)
     c.addCounter(counter_name,counter_name + ' description')
 
 Results:
@@ -443,7 +451,8 @@ Results:
     Query:  insert into counters.counters (counter_name,counter_description) values (%s,%s)
     Values:  ['c1', 'c1 description']
 
-Next example increments the counter
+Use the method <a href="../reference/#src.pgOperations.pgOperations.PgCounters.incrementCounter" 
+target="_blank"> PgCounters.incrementCounter</a> to increment a counter:
 
     v1=c.incrementCounter(counter_name)
     print('Returned value 1: ',v1)
@@ -455,7 +464,8 @@ Results:
     Current counter value:  1
     Returned value 1:  1
 
-Next example gets the current value of the counter:
+Use the method <a href="../reference/#src.pgOperations.pgOperations.PgCounters.getCounterValue" 
+target="_blank"> PgCounters.getCounterValue</a> to get the counter value:
 
     r1=c.getCounterValue(counter_name)
     print('Returned value 3: ',r1)
@@ -467,7 +477,8 @@ Results:
     Current counter value:  1
     Returned value 3:  1
 
-Next example gets all the counters, its description and values:
+Use the method <a href="../reference/#src.pgOperations.pgOperations.PgCounters.getAllCounters" 
+target="_blank">PgCounters.getAllCounters</a> to get all the counters, its description, and values:
 
     r=c.getAllCounters()
     print('All counters: ',r)
@@ -484,12 +495,15 @@ are the following:
     ]
 
 
-Nest example deletes a counter:
+Use the method <a href="../reference/#src.pgOperations.pgOperations.PgCounters.deleteCounter" 
+target="_blank">PgCounters.deleteCounter</a> to delete a counter:
+
     n=c.deleteCounter('c1')
 
 And the results are the following:
 
-    pgDelete #the method calls pgDelete to remove the correspondig row in counters.counters
+    pgDelete #the method calls pgDelete to remove the 
+        corresponding row in counters.counters
     Query:  delete from counters.counters where counter_name=%s
     where_clause:  counter_name=%s
     where_values_list ['c1']
