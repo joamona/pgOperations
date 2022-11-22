@@ -39,8 +39,10 @@ Create the database:
 The <a href="../reference/#src.pgOperations.pgOperations.PgDatabases.createDatabase" target="_blank">createDatabase</a> 
 method returns an opened PgConnect instance, connected to the new database. 
 
-## Create a table
-Execute regular SQL code to create an scheme and a table in the `pgoperationstest` database, continuing with the previous listing:
+## Create an example table
+Execute regular SQL code to create an scheme and a table in the `pgoperationstest` database, continuing with the previous listing. There is also an utility for creating tables. See 
+<a href="reference/#src.pgOperations.pgOperations.PgOperations.pgCreateTable" 
+target="_blank"> PgOperations.pgCreateTable</a>.
 
     pgc2.cursor.execute("create schema d")
     pgc2.cursor.execute("create table d.points (gid serial primary key, 
@@ -317,9 +319,181 @@ only the files `image1.jpg` and `image2.jpg`, the result will be:
     'notDeletedFilenames': ['image3.jpg'], 
     'base_path': '/home/user/app/media/customers/img'}
 
+### Get table field names
+This utility returns the table field names as a string or as a list. Besides
+if the table has a geometry field, e.g. `geom`, this utility can return this
+field name as `geom`, `st_astext(geom)`, `st_asgeojson(geom)`, `st_transform(st_asgeojson(geom),givenEPSG)`, or `st_transform(st_astext(geom),givenEPSG)`. The objetive is, the output of
+this function, could be used as input for the parameter `list_fields_to_select`
+of the methods <a href="reference/#src.pgOperations.pgOperations.PgOperations.pgSelect" target="_blank"> PgOperations.pgSelect</a> and <a href="reference/#src.pgOperations.pgOperations.PgOperations.pgUpdate" target="_blank"> PgOperations.pgUpdate</a> 
+
+It is very common not to update all the field values, as some of them are automatically set
+by the database, because they have default values, commonly `serials` or timestapm field `types`.
+Because that this utility allow to remove some fields of the output. Next example returns the
+all field names in a list:
+
+    r=pgo.pgGetTableFieldNames('d.points')
+
+Results:
+
+    pgGetTableFieldNames
+    Query:  SELECT column_name FROM information_schema.columns WHERE table_schema=%s and table_name = %s
+    Fields list: ['gid', 'description', 'depth', 'geom']
+    Field names:  ['gid', 'description', 'depth', 'geom']   
+
+Example to select all the field names, except `description`, getting the geometry as geojson and
+getting the result as string: 
+
+    gf=pg.SelectGeometryFormat()
+    gfo=pg.SelectGeometryFieldOptions(geom_field_name='geom',
+        select_geometry_format=gf.geojson,     
+        epsg_to_reproject='25831')
+    r=pgo.pgGetTableFieldNames('d.points',gfo,
+        list_fields_to_remove=['description'],returnAsString=True)
+    print('Field names: ', r)
+
+Result:
+
+    pgGetTableFieldNames
+    Query:  SELECT column_name FROM information_schema.columns WHERE table_schema=%s and table_name = %s
+    Fields list: ['gid', 'depth', 'st_asgeojson(st_transform(geom,25831))']
+    Field names:  gid,depth,st_asgeojson(st_transform(geom,25831))
+
+Next example shows how to use the output of this method as input of 
+<a href="reference/#src.pgOperations.pgOperations.PgOperations.pgSelect" 
+target="_blank"> PgOperations.pgSelect</a>:
+
+    gf=pg.SelectGeometryFormat()
+    gfo=pg.SelectGeometryFieldOptions(geom_field_name='geom',select_geometry_format=gf.geojson, epsg_to_reproject='25831')
+    fieldNames=pgo.pgGetTableFieldNames('d.points',gfo,list_fields_to_remove=['description'],returnAsString=True)
+    print('Field names: ', fieldNames)
+    wc=pg.WhereClause(where_clause='gid=%s',where_values_list=[3])
+    res=pgo.pgSelect(table_name='d.points', string_fields_to_select=fieldNames,whereClause=wc)
+    print('Selection result: ', res)
+
+Results:
+
+    pgGetTableFieldNames
+    Query:  SELECT column_name FROM information_schema.columns WHERE table_schema=%s and table_name = %s
+    Fields list: ['gid', 'depth', 'st_asgeojson(st_transform(geom,25831))']
+    Field names:  gid,depth,st_asgeojson(st_transform(geom,25831))
+    pgSelect
+    Query:  SELECT array_to_json(array_agg(registros)) FROM (select gid,depth,st_asgeojson(st_transform(geom,25831)) from d.points  where gid=%s   limit 100) as registros
+    where_clause:  gid=%s
+    where_values_list [3]
+    Num of selected rows:  1
+    Selection result:  [{'gid': 3, 'depth': 12.15, 'st_asgeojson': '{"type":"Point","crs":{"type":"name","properties":{"name":"EPSG:25831"}},"coordinates":[-673652.189790939,202.793646159]}'}]
+
+### Table exists
+Returns True or False, depending on if the table exists in the database or not.
+table_name_with_schema: table name included the schema, e.g. "d.boundary". 
+See the <a href="reference/#src.pgOperations.pgOperations.PgOperations.pgTableExists" 
+target="_blank"> PgOperations.pgTableExists</a> method documentation for more details:
+
+Example:
+
+    res=pgo.pgTableExists(table_name_with_schema='d.points')
+    print('Table exists: ', res)
+
+Result:
+
+    Table exists
+    pgTableExists
+    Query: SELECT EXISTS (SELECT 1 FROM   information_schema.tables WHERE  table_schema = %s AND    table_name = %s)
+    Table exists:  True
+
+### Value exists in field
+It is very common check if a value exists in a column. For example in the case of
+users, or emails. This function returns `True` or `False`,
+ depending whether or not if a value exists in a column. 
+See the <a href="reference/#src.pgOperations.pgOperations.PgOperations.pgValueExists" 
+target="_blank"> PgOperations.pgValueExists</a> method documentation for more details:
+
+Example:
+
+   res=pgo.pgValueExists(table_name_with_schema='d.points',field_name='gid',field_value= 3)
+
+Result:
+
+    pgValueExists
+    Query:  SELECT exists (SELECT gid FROM d.points WHERE gid = %s LIMIT 1)
+    Field name: 'gid'. Field value: 3
+    Exists:  True
+    Value exists: True
+
+### Manage counters
+This module has a class, called 
+<a href="reference/#src.pgOperations.pgOperations.Counters" 
+target="_blank"> Counters</a> to manage counters. See the class method
+documentations to get more details.
+
+This example creates a counter:
+
+    counter_name = 'c1'
+    c=pg.Counters(pgo)
+    c.addCounter(counter_name,counter_name + ' description')
+
+Results:
+
+    Add counter
+    pgTableExists #pgTable exists call to check if the table counters.counters exists
+    Query: SELECT EXISTS (SELECT 1 FROM   information_schema.tables WHERE  table_schema = %s AND    table_name = %s)
+    addCounter #add counter prints
+    Create sequence:  create sequence counters.c1 as integer start with %s increment by %s
+    pgInsert #pgInsert call to insert in the table counters.counters 
+    Query:  insert into counters.counters (counter_name,counter_description) values (%s,%s)
+    Values:  ['c1', 'c1 description']
+
+Next example increments the counter
+
+    v1=c.incrementCounter(counter_name)
+    print('Returned value 1: ',v1)
+
+Results:
+
+    incrementCounter
+    Query:  select nextval(%s)
+    Current counter value:  1
+    Returned value 1:  1
+
+Next example gets the current value of the counter:
+
+    r1=c.getCounterValue(counter_name)
+    print('Returned value 3: ',r1)
+
+Results:
+
+    getCounterValue
+    Quer: y select last_value from counters.c1
+    Current counter value:  1
+    Returned value 3:  1
+
+Next example gets all the counters, its description and values:
+
+    r=c.getAllCounters()
+    print('All counters: ',r)
+
+The results, after having added another, counter and having incremented them, 
+are the following:
+
+    ...
+    #prints of other PgOperations method calls inside the method getAllCounters
+    ...
+    All counters:  [
+        {'gid': 17, 'counter_name': 'c1', 'counter_description': 'c1 description', 'value': 2}, 
+        {'gid': 18, 'counter_name': 'c2', 'counter_description': 'c2 description', 'value': 2}
+    ]
 
 
+Nest example deletes a counter:
+    n=c.deleteCounter('c1')
 
+And the results are the following:
 
-
-
+    pgDelete #the method calls pgDelete to remove the correspondig row in counters.counters
+    Query:  delete from counters.counters where counter_name=%s
+    where_clause:  counter_name=%s
+    where_values_list ['c1']
+    Number of rows deleted:  1
+    deleteCounter #the deleteCounter prints start here
+    Query drop sequence if exists counters.c1
+    Sequences deleted:  1

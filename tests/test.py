@@ -11,7 +11,9 @@ create table d.points (gid serial primary key, description varchar, depth double
 """
 
 import sys
-import pgOperations as pg
+sys.path.append('/home/joamona/www/apps/desweb/pgOperations')
+
+from src.pgOperations import pgOperations as pg
 
 database="pgoperationtest"
 user="postgres"
@@ -242,7 +244,88 @@ def deleteWithFiles():
     pgo.pgConnection.disconnect() 
     print(r)
 
+def getTableFieldNames1():
+    print('getTableFieldNames. Todos los campos')
+    oCon=pg.PgConnect(database="pgoperationstest", user="postgres", password="postgres", host="localhost", port="5432")  
+    pgo=pg.PgOperations(pgConnection=oCon, global_print_queries=global_print_queries)
+    r=pgo.pgGetTableFieldNames('d.points')
+    print('Field names: ', r)
+    pgo.pgConnection.disconnect() 
+
+def getTableFieldNames2():
+    print('getTableFieldNames. Todos los campos menos description')
+    oCon=pg.PgConnect(database="pgoperationstest", user="postgres", password="postgres", host="localhost", port="5432")  
+    pgo=pg.PgOperations(pgConnection=oCon, global_print_queries=global_print_queries)
+    r=pgo.pgGetTableFieldNames('d.points',list_fields_to_remove=['description'])
+    print('Field names: ', r)
+    pgo.pgConnection.disconnect() 
+
+def getTableFieldNames3():
+    print('getTableFieldNames. Todos los campos menos description, Obteniendo la geometría como geojson')
+    oCon=pg.PgConnect(database="pgoperationstest", user="postgres", password="postgres", host="localhost", port="5432")  
+    pgo=pg.PgOperations(pgConnection=oCon, global_print_queries=global_print_queries)
+    gf=pg.SelectGeometryFormat()
+    gfo=pg.SelectGeometryFieldOptions(geom_field_name='geom',select_geometry_format=gf.geojson, epsg_to_reproject='25831')
+    r=pgo.pgGetTableFieldNames('d.points',gfo,list_fields_to_remove=['description'],returnAsString=True)
+    print('Field names: ', r)
+    pgo.pgConnection.disconnect() 
+
+
+def getTableFieldNames4():
+    print('getTableFieldNames. Todos los campos menos description, Obteniendo la geometría como geojson reproyectada')
+    oCon=pg.PgConnect(database="pgoperationstest", user="postgres", password="postgres", host="localhost", port="5432")  
+    pgo=pg.PgOperations(pgConnection=oCon, global_print_queries=global_print_queries)
+    gf=pg.SelectGeometryFormat()
+    gfo=pg.SelectGeometryFieldOptions(geom_field_name='geom',select_geometry_format=gf.geojson, epsg_to_reproject='25831')
+    fieldNames=pgo.pgGetTableFieldNames('d.points',gfo,list_fields_to_remove=['description'],returnAsString=True)
+    print('Field names: ', fieldNames)
+    wc=pg.WhereClause(where_clause='gid=%s',where_values_list=[3])
+    res=pgo.pgSelect(table_name='d.points', string_fields_to_select=fieldNames,whereClause=wc)
+    print('Selection result: ', res)
+    pgo.pgConnection.disconnect() 
+
+def tableExists():
+    print('Table exists')
+    oCon=pg.PgConnect(database="pgoperationstest", user="postgres", password="postgres", host="localhost", port="5432")  
+    pgo=pg.PgOperations(pgConnection=oCon, global_print_queries=global_print_queries)
+    res=pgo.pgTableExists(table_name_with_schema='d.points')
+    print('Table exists: ', res)
+    pgo.pgConnection.disconnect()    
+
+def valueExists():
+    print('Value exists')
+    oCon=pg.PgConnect(database="pgoperationstest", user="postgres", password="postgres", host="localhost", port="5432")  
+    pgo=pg.PgOperations(pgConnection=oCon, global_print_queries=global_print_queries)
+    res=pgo.pgValueExists(table_name_with_schema='d.points',field_name='gid',field_value= 3)
+    print('Value exists:', res)
+    pgo.pgConnection.disconnect()   
+
+def addCounter(counter_name):
+    print('Add counter')
+    oCon=pg.PgConnect(database="pgoperationstest", user="postgres", password="postgres", host="localhost", port="5432")  
+    pgo=pg.PgOperations(pgConnection=oCon, global_print_queries=global_print_queries)
+    c=pg.Counters(pgo)
+    c.addCounter(counter_name,counter_name + ' description')
+    v1=c.incrementCounter(counter_name)
+    print('Returned value 1: ',v1)
+    v2=c.incrementCounter(counter_name)
+    print('Returned value 2: ',v2)
+    r1=c.getCounterValue(counter_name)
+    print('Returned value 3: ',r1)
+    r=c.getAllCounters()
+    print('All counters: ',r)
+    pgo.pgConnection.disconnect()  
+
+def deleteCounter(counter_name):
+    oCon=pg.PgConnect(database="pgoperationstest", user="postgres", password="postgres", host="localhost", port="5432")  
+    pgo=pg.PgOperations(pgConnection=oCon, global_print_queries=global_print_queries)
+    c=pg.Counters(pgo)
+    n=c.deleteCounter(counter_name)
+
 if __name__=="__main__":
+    """
+    The performed PgOperations tests
+    """
     testDropDatabase()
     testCreateDatabase()
     insert1()
@@ -268,4 +351,15 @@ if __name__=="__main__":
     insertCustomers()
     print("------------------------------------")
     deleteWithFiles()
-
+    getTableFieldNames1()
+    getTableFieldNames2()
+    getTableFieldNames3()
+    getTableFieldNames4()
+    tableExists()
+    valueExists()
+    addCounter('c1')
+    addCounter('c2')
+    deleteCounter('c1')
+    deleteCounter('c2')
+    deleteCounter('c3')
+    

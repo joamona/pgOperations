@@ -24,10 +24,8 @@ This library depends of the psycopg2 library (http://initd.org/psycopg/).
 
 This library uses Python >= 3
 '''
-from email.mime import base
-from tkinter import NO
-from typing import Union
-from xmlrpc.client import Boolean, boolean
+
+from typing import Union, Any
 
 import psycopg2, os
 import psycopg2.extensions
@@ -125,6 +123,7 @@ class PgConnect(PgConnection):
         """
         self.conn=psycopg2.connect(database=database, user=user, password=password, host=host, port=port)
         PgConnection.__init__(self,self.conn)
+        self.database=database
         self.user=user
         self.password=password
         self.host=host
@@ -230,6 +229,7 @@ class FieldsAndValuesBase():
         self.list_field_values=list_field_values
         self.str_s_values=str_s_values
 
+
 class GeometryFieldOptions():
     """Class with the details of the geometry field in the dictionary `d`, argument of the
     methods [pgInsert][src.pgOperations.pgOperations.PgOperations.pgInsert] and 
@@ -242,7 +242,7 @@ class GeometryFieldOptions():
     geom_field_name=None, 
     epsg=None
     epsg_to_reproject=None
-    def __init__(self,geom_field_name: str,epsg: Union[str, int],
+    def __init__(self,geom_field_name: str = 'geom',epsg: Union[str, int]=None,
          epsg_to_reproject: Union[str, int]=None):
         """Constructor
 
@@ -250,13 +250,74 @@ class GeometryFieldOptions():
 
             >>>geometryFieldOptions=pg.GeometryFieldOptions(geom_field_name="geom", 
                     epsg='25830',epsg_to_reproject="25831")
+        
+        Args:
+
+            geom_field_name: Table geometry field name.
+            epsg: Current EPSG SRC code of the geometry.
+            epsg_to_reproject: On inserting or getting the geometry, the
+                geometry will be reprojected to this new SRC.
         """
         self.geom_field_name=geom_field_name
         self.epsg=str(epsg)
         if epsg_to_reproject is not None:
             self.epsg_to_reproject=str(epsg_to_reproject)
 
+class SelectGeometryFormat():
+    """
+    Contains the allowed formats to get the coordinates of a geometry.
+    The possible values are 'text', 'geojson', or 'binary'.
 
+    This class is useful to create an instance of the class SelectGeometryFieldOptions.
+    Examples:
+        >>>gf=pg.SelectGeometryFormat()
+        >>>gfo=pg.SelectGeometryFieldOptions(geom_field_name='geom',select_geometry_format=gf.geojson, epsg_to_reproject='25831')
+        >>>fieldNames=pgo.pgGetTableFieldNames('d.points',gfo,list_fields_to_remove=['description'],returnAsString=True)
+        >>>wc=pg.WhereClause(where_clause='gid=%s',where_values_list=[3])
+        >>>res=pgo.pgSelect(table_name='d.points', string_fields_to_select=fieldNames,whereClause=wc)
+    """
+    text: str = 'text'
+    geojson: str ='geojson'
+    binary: str = 'binary'
+
+class SelectGeometryFieldOptions():
+    """
+    This class allows to specify the format to retrieve the geometry field name, e.g.
+    'geom', 'st_astext(geom)', 'st_asgeojson(geom)', 'st_transform(st_asgeojson(geom),EPSG),
+    or 'st_transform(st_astext(geom),EPSG).
+    
+    This is useful to get the field names in a proper string to select rows.
+
+    Examples:
+        >>>gf=pg.SelectGeometryFormat()
+        >>>gfo=pg.SelectGeometryFieldOptions(geom_field_name='geom',
+            select_geometry_format=gf.geojson, epsg_to_reproject='25831')#
+        >>>fieldNames=pgo.pgGetTableFieldNames('d.points',gfo,list_fields_to_remove=['description'],
+            returnAsString=True)
+        >>>wc=pg.WhereClause(where_clause='gid=%s',where_values_list=[3])
+        >>>res=pgo.pgSelect(table_name='d.points', string_fields_to_select=fieldNames,whereClause=wc)
+    """
+    geom_field_name: str = None
+    select_geometry_format: str = None
+    epsg_to_reproject: Union[str,int] = None
+
+    def __init__(self, geom_field_name:str='geom',
+            epsg_to_reproject: Union[str, int]=None,
+            select_geometry_format: str = 'text'):
+        """Constructor
+                    
+            geom_field_name: The geometry field name.
+            epsg_to_reproject: The EPSG code to reproject the geometry
+            select_geometry_format: The format to retrieve the geometry. 
+                The value can be: 'text', 'geojson', or 'binary'. Otherwise
+                raises an error.
+        """
+        if select_geometry_format not in ['binary', 'geojson','text']:
+            raise Exception("Select geometry format not in ['binary', 'geojson','text']")
+        self.geom_field_name=geom_field_name
+        self.epsg_to_reproject=epsg_to_reproject
+        self.select_geometry_format=select_geometry_format
+    
 class FieldsAndValues(FieldsAndValuesBase):
     """Create a SQL expression from a Python dictionary. 
 
@@ -409,7 +470,7 @@ class PgOperations():
     autoCommit: bool = None
  
     def __init__(self, pgConnection: Union[PgConnect, PgConnection], 
-                autoCommit: bool = True, global_print_queries: Boolean=False):
+                autoCommit: bool = True, global_print_queries: bool = False):
         """Constructor
 
         Examples:
@@ -432,7 +493,7 @@ class PgOperations():
                
     def pgInsert(self, table_name: str, 
             fieldsAndValues: Union[FieldsAndValuesBase,FieldsAndValues], 
-            str_fields_returning: str = None, print_query: boolean=False)->list:
+            str_fields_returning: str = None, print_query: bool=False)->list:
         """Inserts a row in a table.
 
         See examples of use in  <a href="../tutorials/#insert" target="_blank">Examples of insert</a>.
@@ -489,7 +550,7 @@ class PgOperations():
     
     def pgUpdate(self, table_name: str, fieldsAndValues: FieldsAndValues, 
                 whereClause: WhereClause=None, 
-                print_query: boolean=False) -> int:
+                print_query: bool=False) -> int:
         """
         Updates a table
         
@@ -534,7 +595,7 @@ class PgOperations():
         self.query=cons
         return cursor.rowcount
     
-    def pgDelete(self, table_name: str, whereClause: WhereClause = None, print_query: boolean=False) -> int:
+    def pgDelete(self, table_name: str, whereClause: WhereClause = None, print_query: bool=False) -> int:
         """
         Delete rows from a table. Example of use:
         
@@ -573,7 +634,7 @@ class PgOperations():
 
     def pgDeleteWithFiles(self, table_name: str, field_name_with_file_name: str,
             whereClause: WhereClause=None, base_path: str=None, 
-            print_query: boolean=False) -> dict:
+            print_query: bool=False) -> dict:
         """
         **This method only has been tested in Linux systems**
 
@@ -622,7 +683,7 @@ class PgOperations():
         return {'numOfRowsDeleted': n, 'deletedFileNames': deletedFileNames, 
             'notDeletedFilenames': notExistingFilenames, 'base_path': base_path}
     
-    def pgDeleteFileInRow(self,row: dict, field_name_with_file_name:str, base_path: str=None) -> boolean:
+    def pgDeleteFileInRow(self,row: dict, field_name_with_file_name:str, base_path: str=None) -> bool:
         """
         If you have a row stored in a dictionary, this function
         deletes a file in the file system. The the filename must be one of the values
@@ -667,9 +728,9 @@ class PgOperations():
             
     def pgSelect(self, table_name: str, string_fields_to_select: str = "*", 
                 whereClause: WhereClause = None, 
-                get_rows_as_dicts: boolean=True,
+                get_rows_as_dicts: bool=True,
                 limit: int=100, orderBy: str=None, groupBy: str=None, 
-                print_query: boolean=False)->list:
+                print_query: bool=False)->list:
         """
         Select rows of a table.
 
@@ -763,32 +824,42 @@ class PgOperations():
 
         return r
 
-    def pgGetTableFieldNames(self, nomTable, changeGeomBySt_asgeojosonGeom=True, nomGeometryField='geom', listOfFieldsToRemove=[],returnAsString=False):
+    def pgGetTableFieldNames(self, table_name: str, 
+            selectGeometryFieldOptions: SelectGeometryFieldOptions=None,
+            list_fields_to_remove: list=None, 
+            returnAsString=False, print_query: bool = False)-> Union[list,str]:
         """
-        Retuns a list with the table field names.
-        @type  nomTable: string
-        @param nomTable: table name included the schema. Ej. "d.linde". 
-            Mandatory specify the schema name: public.tablename
-        @type  changeGeomBySt_asgeojosonGeom: boolean
-        @param changeGeomBySt_asgeojosonGeom: Specifies id the geom name field is changed by st_asgeojson(fieldName).     
-        @type  nomGeometryField: string
-        @param nomGeometryField: the geometry field name
-        @param returnAsString: if true returns the fields in a string 'campo1,campo2,...' 
-        @param listOfFieldsToRemove: a list with the fields of the table to remove from the result
-        @return: A list with the table field names
-    
-        Executes the sentence: 
-        SELECT column_name FROM information_schema.columns WHERE table_schema='h30' and table_name = 'linde';
+        Returns the field names of a table. Depending of the `returnAsString` parameter
+        returns a string or a list.
+        The geometry field name can be returned with one of the following formats:
+        'geom', 'st_astext(geom)', 'st_asgeojson(geom)', 'st_transform(st_asgeojson(geom),EPSG),
+        or 'st_transform(st_astext(geom),EPSG). The objetive with this is the output of
+        this function serves to input for the parameter `list_fields_to_select`
+        of the method pgSelect.
+
+        Examples:
+            >>>gf=pg.SelectGeometryFormat()
+            >>>gfo=pg.SelectGeometryFieldOptions(geom_field_name='geom',
+                select_geometry_format=gf.geojson, epsg_to_reproject='25831')#
+            >>>fieldNames=pgo.pgGetTableFieldNames('d.points',gfo,list_fields_to_remove=['description'],
+                returnAsString=True)
+            >>>wc=pg.WhereClause(where_clause='gid=%s',where_values_list=[3])
+            >>>res=pgo.pgSelect(table_name='d.points', string_fields_to_select=fieldNames,whereClause=wc)
         
-        Examples of use:
-            listaCampos=getTableFieldNames('d.buildings')
-                Returns: [u'gid', u'descripcion', u'area', 'st_asgeojson(geom)', u'fecha']
-            listaCampos=getTableFieldNames(d.buildings', changeGeomBySt_asgeojosonGeom=False, nomGeometryField='geom')
-                Returns: [u'gid', u'descripcion', u'area', u'geom', u'fecha']
+        Args:
+            table_name: 
+            selectGeometryFieldOptions: 
+            list_fields_to_remove: 
+            returnAsString: 
+            print_query: 
+
+        Returns: 
+            If `returnAsString` is False, a list of the field names the table, 
+            If `returnAsString` is False, a string with field names of the a table 
         """
-        
+ 
         consulta="SELECT column_name FROM information_schema.columns WHERE table_schema=%s and table_name = %s";
-        lis=nomTable.split(".")
+        lis=table_name.split(".")
         
         cursor=self.pgConnection.cursor
         cursor.execute(consulta,lis)
@@ -798,17 +869,46 @@ class PgOperations():
         listaValores=cursor.fetchall()#es una lista de tuplas.
                 #cada tupla es una fila. En este caso, la fila tiene un
                 #unico elemento, que es el nombre del campo.
-        #print(listaValores)
+
+        if selectGeometryFieldOptions is not None:
+            if (selectGeometryFieldOptions.geom_field_name,) not in listaValores:
+                raise Exception("pgGetTableFieldNames. The geometry field name {0} is not a field of the table {1}".format(selectGeometryFieldOptions.geom_field_name, table_name))
+
         listaNombreCampos=[]
         for fila2 in listaValores:
             valor=fila2[0]
-            if valor in listOfFieldsToRemove:
-                continue
-            if changeGeomBySt_asgeojosonGeom:
-                if valor==nomGeometryField:
-                    valor='st_asgeojson({0})'.format(nomGeometryField)
+            if list_fields_to_remove is not None:
+                if valor in list_fields_to_remove:
+                    continue
+            if selectGeometryFieldOptions is not None:
+                if valor==selectGeometryFieldOptions.geom_field_name:
+                    if selectGeometryFieldOptions.epsg_to_reproject is not None:
+                        if 'binary' == selectGeometryFieldOptions.select_geometry_format:
+                            valor='st_transform({geom_field_name},{epsg_to_reproject})'.format(
+                                geom_field_name = valor, 
+                                epsg_to_reproject=selectGeometryFieldOptions.epsg_to_reproject)
+                        elif 'text' == selectGeometryFieldOptions.select_geometry_format:
+                            valor='st_astext(st_transform({geom_field_name},{epsg_to_reproject}))'.format(
+                                geom_field_name = valor, 
+                                epsg_to_reproject=selectGeometryFieldOptions.epsg_to_reproject)
+                        elif 'geojson' == selectGeometryFieldOptions.select_geometry_format:
+                            valor='st_asgeojson(st_transform({geom_field_name},{epsg_to_reproject}))'.format(
+                            geom_field_name = valor, 
+                            epsg_to_reproject=selectGeometryFieldOptions.epsg_to_reproject)
+                    else:
+                        if 'binary' == selectGeometryFieldOptions.select_geometry_format:
+                                valor='{geometry_field_name}'.format(geom_field_name = valor)
+                        elif 'text' == selectGeometryFieldOptions.select_geometry_format:
+                            valor='st_astext({geom_field_name})'.format(geom_field_name = valor)
+                        elif 'geojson' == selectGeometryFieldOptions.select_geometry_format:
+                            valor='st_asgeojson({geom_field_name})'.format(geom_field_name = valor)
             listaNombreCampos.append(valor)
         self.query=consulta
+
+        if self.global_print_queries or print_query:
+            print('pgGetTableFieldNames')
+            print('Query: ', consulta)
+            print('Fields list:', listaNombreCampos)
 
         if returnAsString:
             s=""
@@ -818,11 +918,19 @@ class PgOperations():
         else:
             return listaNombreCampos   
 
-    def pgTableExists(self, table_name_with_schema: str, print_query: boolean=False)->Boolean:
+    def pgTableExists(self, table_name_with_schema: str, print_query: bool=False)->bool:
         """
         Returns True or False, depending on if the table exists in the database or not.
-        table_name_with_schema: table name included the schema. Ej. "d.boundary".
-        print_query: For debugging purposes. If true will print the queries. 
+        table_name_with_schema: table name included the schema, e.g. "d.boundary".
+
+        Args:
+            
+            table_name_with_schema: The table name, e.g. "d.boundary"
+            print_query: For debugging purposes. If true will print the queries. 
+
+        Examples:
+
+            >>>res=pgo.pgTableExists(table_name_with_schema='d.points')
     
         Returns: 
             True or False, depending on if the table exists in the database or not.
@@ -840,9 +948,11 @@ class PgOperations():
         return r[0][0]
 
     def pgCreateTable(self,table_name_with_schema:str, fields_definition:str, 
-        delete_table_if_exists: bool, print_query: bool= False)->bool:
+        delete_table_if_exists: bool=False, print_query: bool= False)->bool:
         """
         Creates a table. If the table already exists this method can delete it.
+        Returns True if the table has been created, or false if the table
+        already existed.
         
         See an example of use in 
         <a href="../tutorials/#delete-rows-and-files">Delete rows and files</a>.
@@ -858,20 +968,24 @@ class PgOperations():
                 if the table exists Psycopg2 will raise an error.
             print_query: For debugging purposes. If true the delete and create table
                 sentences will be printed.
-       
         
-        See an example of use in 
-        <a href="../tutorials/#delete-rows-and-files">Delete rows and files</a>.
+        Returns:
+
+            True if the table has been created, or false if the table already existed,
+                and was not deleted and created again, because the argument 
+                `delete_table_if_exists` was False.
         """
         schema=table_name_with_schema.split(sep='.')[0]
         tableName=table_name_with_schema.split(sep='.')[1]
-        if delete_table_if_exists:
-            if self.pgTableExists(table_name_with_schema=table_name_with_schema, print_query=print_query):
+        if self.pgTableExists(table_name_with_schema=table_name_with_schema, print_query=print_query):
+            if delete_table_if_exists:
                 cons='drop table "{schema}"."{tableName}"'.format(schema=schema,tableName=tableName)
                 self.pgConnection.cursor.execute(cons)
                 if self.global_print_queries or print_query:
                     print('pgCreateTable')
                     print("Query to delete the table: ", cons)
+            else:
+                return False
         cons='create table "{schema}"."{tableName}" ({fields_definition})'.format(
                     schema=schema,tableName=tableName,fields_definition=fields_definition)
         #print(cons)
@@ -883,38 +997,205 @@ class PgOperations():
             print("Query to create the table: ", cons)
         return True
         
-    def pgValueExists(self, table_name_with_schema, column_name, column_value):
+    def pgValueExists(self, table_name_with_schema: str, field_name: str, field_value: Any, print_query: bool=False)->bool:
         """
-        Returns a true or false depending on if the value exists on the column or not.
-        @type  table_name_with_schema: string
-        @param table_name_with_schema: table name included the schema. Ej. "d.linde". 
-        @type  column_name: string
-        @param column_name: column name. Ej. "username". 
-        @type  column_value: any
-        @param any value in the column. 
-        @return: true or false
+        Returns True or False depending whether or not if a value exists in a column.
+
+        Args:
+            table_name_with_schema: Table name included the schema. Ej. "d.linde". 
+            column_name: Column name, e.g. "username". 
+            column_value: Any value in the column. 
+            print_query: For debugging purposes. If True will print 
+                the query and values in the function.
+        
+        Returns: 
+            True or False
         """
 
-        cons="SELECT exists (SELECT {0} FROM {1} WHERE {2} = %s LIMIT 1)".format(column_name, table_name_with_schema, column_name)
-        self.pgConnection.cursor.execute(cons,[column_value])
+        cons="SELECT exists (SELECT {0} FROM {1} WHERE {2} = %s LIMIT 1)".format(field_name, table_name_with_schema, field_name)
+        self.pgConnection.cursor.execute(cons,[field_value])
         r=self.pgConnection.cursor.fetchall()
+        if self.global_print_queries or print_query:
+            print('pgValueExists')
+            print("Query: ", cons)
+            print("Field name: '{0}'. Field value: {1}".format(field_name, field_value))
+            print("Exists: ", r[0][0])
         return r[0][0]
 
     def pgDeleteAllTableRowsFromTableWithColumnValue(self, tableName, columnName, columnValue):
-        """
-        Deletes all rows from a work from a table. For example:
-        deleteAllTableRowsFromTableWithColumnValue(tableName="public.work_images", columnName="color_works_gid", columnValue=25)
-        removes all the rows from public.work_images where color_works_gid=25
-        """
+        #deleteAllTableRowsFromTableWithColumnValue(tableName="public.work_images", columnName="color_works_gid", columnValue=25)
+        #removes all the rows from public.work_images where color_works_gid=25
+        
         return self.pgDelete(table_name=tableName, cond_where=columnName + " =%s", list_values_cond_where=[columnValue])
 
-    def pgIncrementCounter(self, tableName, columnNameToIncrement, cond_where, list_val_cond_where, increment_value=1):
-        r=self.pgSelect(table_name=tableName, string_fields_to_select=columnNameToIncrement, cond_where=cond_where,list_val_cond_where=list_val_cond_where)
-        if r[0][columnNameToIncrement] is None:
-            value=1
-        else:
-            value=r[0][columnNameToIncrement]+increment_value
+
+class Counters:
+    """
+    Counters are created as sequences, and the sequences are represented
+    in the database as tables. The current value of the counters are get
+    with the sentence `select last_value from sequence_name`.
+    All the counters, or sequences, are stored in the schema counters.
+
+    Counters name should be given without the schema name.
+    The schema `counters` ant the table `counters.counters` are automatically 
+    created first time a counter is added. 
+    The table `counters.counters` contains the counters name and a description.
+    This table is used by the method `getAllCounters`, which lists all the counters,
+    its description and its current value.
+
+    Examples of use in <a href="../tutorials/#manage-counters">Manage counters</a>.
+    """
+    counter_schema='counters'
+    counters_table='counters.counters'
+    pgo: PgOperations = None
+    def __init__(self, pgOperations: PgOperations) -> None:
+        """
+        Constructor.
+
+        Args:
+            pgOperations: PgOperations instance.
+        """
+        self.pgo=pgOperations
+
+    def addCounter(self, counter_name:str, counter_description: str, start = 1, 
+        incrementBy=1, print_query=False): 
+        """
+        Adds a counter. Creates the schema `counters` and the table `counters.counters`
+        if they do not exist. Adds to the table `counters.counters` a row with
+        the counter name and the counter description.
+
+        If the counter already exists, an exception will be raised.
+
+        If the schema `counters` or the table `counters.counters` already
+        exists this function does not raise any exception.
+
+        Args:
+            counter_name: Counter name without schema, e.g. 'visits'.
+            counter_description: Counter description.
+            start: Number to start the counter.
+            incrementBy: Increment to add to the counter.
+            print_query: For debug purposes. In true prints the queries and
+                values of the query in the function.
+        """    
+        if start<1:
+            raise Exception("start can not be less than 1")
+        complete_counter_name=self.counter_schema + '.' + counter_name
+        cons='create schema if not exists counters'
+        self.pgo.pgConnection.cursor.execute(cons)
+        self.pgo.pgCreateTable(self.counters_table,'gid serial primary key, counter_name varchar unique, counter_description varchar',False,print_query)
+
+        cons='create sequence {complete_counter_name} as integer start with %s increment by %s'.format(
+                complete_counter_name=complete_counter_name)
+
+        self.pgo.pgConnection.cursor.execute(cons,(start,incrementBy))
+
+        if self.pgo.global_print_queries or print_query:
+            print('addCounter')
+            print('Create sequence: ', cons)
         
-        oStrFielsAndValues=StrFielsAndValuesBase(str_field_names=columnNameToIncrement,list_field_values=[value], str_s_values="%s")
-        numRows=self.pgUpdate(tableName,oStrFielsAndValues,cond_where,list_val_cond_where)
-        return numRows
+        if self.pgo.autoCommit:
+            self.pgo.pgConnection.commit()
+        fav=FieldsAndValues({'counter_name':counter_name, 'counter_description':counter_description})
+        self.pgo.pgInsert(self.counters_table,fav,None,print_query)
+
+    def deleteCounter(self,counter_name: str, print_query=False)->int:
+        """
+        Deletes a counter,  or sequence. Also deletes de corresponding row
+        in the table `counters.counters`.
+        If the counter does not exist, this method do not raises any exception.
+
+        Args:
+            counter_name: Counter name without schema, e.g. 'visits'.
+            print_query: For debug purposes. In true prints the queries and
+                values of the query in the function.
+        
+        Returns:
+            An integer with the number of rows of the table `counters.counters` deleted.
+
+        """
+        complete_counter_name=self.counter_schema + '.' + counter_name
+        cons='drop sequence if exists {0}'.format(complete_counter_name)
+        self.pgo.pgConnection.cursor.execute(cons)
+        if self.pgo.autoCommit:
+            self.pgo.pgConnection.commit()
+
+        wc=WhereClause('counter_name=%s',[counter_name])
+        n=self.pgo.pgDelete(self.counters_table,wc,print_query)
+
+        if self.pgo.global_print_queries or print_query:
+            print('deleteCounter')
+            print('Query', cons)
+            print('Sequences deleted: ', n)
+
+        return n
+
+    def incrementCounter(self,counter_name: str, print_query=False)->int:
+        """
+        Increments the counter value.
+
+        Counters are incremented even the transaction is rolled back.
+
+        Args:
+
+            counter_name: Counter name without schema, e.g. 'visits'.
+            print_query: For debug purposes. In true prints the queries and
+                values of the query in the function.
+        
+        Returns:
+            The current counter value.
+        """
+        complete_counter_name=self.counter_schema + '.' + counter_name
+        cons='select nextval(%s)'
+        self.pgo.pgConnection.cursor.execute(cons,[complete_counter_name])
+        r=self.pgo.pgConnection.cursor.fetchall();
+
+        if self.pgo.global_print_queries or print_query:
+            print('incrementCounter')
+            print('Query: ', cons)
+            print('Current counter value: ', r[0][0])
+
+        return r[0][0]
+
+    def getCounterValue(self,counter_name:str, print_query=False)->int:
+        """
+        Returns the current counter value.
+
+        Args:
+
+            counter_name: Counter name without schema, e.g. 'visits'.
+            print_query: For debug purposes. In true prints the queries and
+                values of the query in the function.
+        
+        Returns:
+            The current counter value.
+        """
+        complete_counter_name=self.counter_schema + '.' + counter_name
+        cons='select last_value from {0}'.format(complete_counter_name)
+        self.pgo.pgConnection.cursor.execute(cons)
+        r=self.pgo.pgConnection.cursor.fetchall()
+        
+        if self.pgo.global_print_queries or print_query:
+            print('getCounterValue')
+            print('Quer: y', cons)
+            print('Current counter value: ', r[0][0])
+        
+        return r[0][0]
+    def getAllCounters(self, print_query=False)->list:
+        """
+        Returns all the counters name, description and current values in a list of
+        dictionaries.
+
+        Args:
+
+            print_query: For debug purposes. In true prints the queries and
+                values of the query in the function.
+        
+        Returns:
+            All the counters name, description and current values in a list of
+        dictionaries.
+        """
+        r=self.pgo.pgSelect(self.counters_table,'*', print_query=print_query)
+        for row in r:
+            currentValue=self.getCounterValue(row['counter_name'])
+            row['value']=currentValue
+        return r

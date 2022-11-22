@@ -22,5 +22,4 @@ Read the documentation to know how to install and use `PgOperations`:
 3. [Reference](reference.md)
 4. [Explanation](explanation.md)
 
-::: src.pgOperations.pgOperations
 
