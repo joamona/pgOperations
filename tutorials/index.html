@@ -1,0 +1,1142 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+        <meta name="author" content="Gaspar Mora-Navarro">
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.4.2, mkdocs-material-8.5.10">
+    
+    
+      
+        <title>Tutorials - PgOperations</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.472b142f.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.08040f6c.min.css">
+        
+      
+      
+
+    
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/_mkdocstrings.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="None" data-md-color-accent="None">
+  
+    
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#tutorial" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="PgOperations" class="md-header__button md-logo" aria-label="PgOperations" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            PgOperations
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Tutorials
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/joamona/pgOperations" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="PgOperations" class="md-nav__button md-logo" aria-label="PgOperations" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    PgOperations
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/joamona/pgOperations" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        Index
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          Tutorials
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        Tutorials
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#installation" class="md-nav__link">
+    Installation
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#create-a-database" class="md-nav__link">
+    Create a database
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#create-an-example-table" class="md-nav__link">
+    Create an example table
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#edit-data" class="md-nav__link">
+    Edit data
+  </a>
+  
+    <nav class="md-nav" aria-label="Edit data">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#insert" class="md-nav__link">
+    Insert
+  </a>
+  
+    <nav class="md-nav" aria-label="Insert">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#example-without-postgis-geometry-field" class="md-nav__link">
+    Example without PostGIS geometry field
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example-with-a-postgis-geometry-field" class="md-nav__link">
+    Example with a PostGIS geometry field
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example-generating-the-expressions-manually" class="md-nav__link">
+    Example generating the expressions manually
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#update" class="md-nav__link">
+    Update
+  </a>
+  
+    <nav class="md-nav" aria-label="Update">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#example-using-a-python-dictionary" class="md-nav__link">
+    Example using a Python dictionary
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example-generating-the-sql-expression-manually" class="md-nav__link">
+    Example generating the SQL expression manually
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#select" class="md-nav__link">
+    Select
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#delete" class="md-nav__link">
+    Delete
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#other-utilities" class="md-nav__link">
+    Other utilities
+  </a>
+  
+    <nav class="md-nav" aria-label="Other utilities">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#delete-rows-and-files" class="md-nav__link">
+    Delete rows and files
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#get-table-field-names" class="md-nav__link">
+    Get table field names
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#table-exists" class="md-nav__link">
+    Table exists
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#value-exists-in-field" class="md-nav__link">
+    Value exists in field
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#manage-counters" class="md-nav__link">
+    Manage counters
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../reference/" class="md-nav__link">
+        Reference
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../explanation/" class="md-nav__link">
+        Explanation
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#installation" class="md-nav__link">
+    Installation
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#create-a-database" class="md-nav__link">
+    Create a database
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#create-an-example-table" class="md-nav__link">
+    Create an example table
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#edit-data" class="md-nav__link">
+    Edit data
+  </a>
+  
+    <nav class="md-nav" aria-label="Edit data">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#insert" class="md-nav__link">
+    Insert
+  </a>
+  
+    <nav class="md-nav" aria-label="Insert">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#example-without-postgis-geometry-field" class="md-nav__link">
+    Example without PostGIS geometry field
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example-with-a-postgis-geometry-field" class="md-nav__link">
+    Example with a PostGIS geometry field
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example-generating-the-expressions-manually" class="md-nav__link">
+    Example generating the expressions manually
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#update" class="md-nav__link">
+    Update
+  </a>
+  
+    <nav class="md-nav" aria-label="Update">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#example-using-a-python-dictionary" class="md-nav__link">
+    Example using a Python dictionary
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example-generating-the-sql-expression-manually" class="md-nav__link">
+    Example generating the SQL expression manually
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#select" class="md-nav__link">
+    Select
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#delete" class="md-nav__link">
+    Delete
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#other-utilities" class="md-nav__link">
+    Other utilities
+  </a>
+  
+    <nav class="md-nav" aria-label="Other utilities">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#delete-rows-and-files" class="md-nav__link">
+    Delete rows and files
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#get-table-field-names" class="md-nav__link">
+    Get table field names
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#table-exists" class="md-nav__link">
+    Table exists
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#value-exists-in-field" class="md-nav__link">
+    Value exists in field
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#manage-counters" class="md-nav__link">
+    Manage counters
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  <a href="https://github.com/joamona/pgOperations/edit/master/docs/tutorials.md" title="Edit this page" class="md-content__button md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75L3 17.25Z"/></svg>
+  </a>
+
+
+<h1 id="tutorial">Tutorial</h1>
+<p>Here you have how to start using 'PgOperations':</p>
+<h2 id="installation">Installation</h2>
+<p>It is good practice always use Python <a href="https://docs.python.org/3/library/venv.html">virtual environments</a> to install new Python libraries. Navigate to the folder where you want to create the virtual environment, for example the 'venvs' folder, and type:</p>
+<pre><code>python3 python3 -m venv pgOperations
+</code></pre>
+<p>Activate the virtual environment to install the modules:</p>
+<pre><code>source pgOperations/bin/activate
+</code></pre>
+<p>Use <a href="https://pypi.org/project/pip/">pip</a> to install the modules in the virtual environment:</p>
+<pre><code>(pgOperations)$pip install psycopg2
+(pgOperations)$pip install pgOperations
+</code></pre>
+<p>Now you are ready to use the library to edit data in PostgreSQL.</p>
+<p>There are mainly three classes whose methods are useful: <a href="../reference/#src.pgOperations.pgOperations.PgOperations" target="_blank">PgOperations</a>, to edit data, <a href="../reference/#src.pgOperations.pgOperations.PgCounters" target="_blank">PgCounters</a>, to manage counters and <a href="../reference/#src.pgOperations.pgOperations.PgDatabases" target="_blank">PgDatabases</a>, to manage databases. The rest of the classes are auxiliary classes
+to arrange the parameters that the useful classes need.</p>
+<p>In the bellow section you have an example of use of all the utilities.</p>
+<h2 id="create-a-database">Create a database</h2>
+<p>To create a database it is necessary first to have an opened connection. Create a regular psycopg2 connection to the 'postgres' database:</p>
+<pre><code>conn=psycopg2.connect(database="postgres", user="postgres", 
+            password="postgres", host="localhost", port=5432)
+</code></pre>
+<p>Create a <a href="../reference/#src.pgOperations.pgOperations.PgConnection" target="_blank">PgConnection</a> instance:</p>
+<pre><code>pgc = pg.PgConnection(conn)
+</code></pre>
+<p>Create a <a href="../reference/#src.pgOperations.pgOperations.PgDatabases" target="_blank">PgDatabases</a> instance. This class allow to create and delete databases:</p>
+<pre><code>pgdb=pg.PgDatabases(pgConnect=pgc)
+</code></pre>
+<p>Create the database:</p>
+<pre><code>pgc2=pgdb.createDatabase(databaseName="pgoperationstest",
+            addPostgisExtension=True,closeNewConnection=False)
+</code></pre>
+<p>The <a href="../reference/#src.pgOperations.pgOperations.PgDatabases.createDatabase" target="_blank">createDatabase</a> 
+method returns an opened PgConnect instance, connected to the new database. </p>
+<h2 id="create-an-example-table">Create an example table</h2>
+<p>Execute regular SQL code to create an scheme and a table in the <code>pgoperationstest</code> database, continuing with the previous listing. There is also an utility for creating tables. See 
+<a href="../reference/#src.pgOperations.pgOperations.PgOperations.pgCreateTable" 
+target="_blank"> PgOperations.pgCreateTable</a>.</p>
+<pre><code>pgc2.cursor.execute("create schema d")
+pgc2.cursor.execute("create table d.points (gid serial primary key, 
+            description varchar, depth double precision, 
+            geom geometry('POINT',25831))")
+</code></pre>
+<p>Commit the changes and close the connections to the databases <code>postgres</code> and <code>pgoperationstest</code>:</p>
+<pre><code>pgc2.commit()
+pgc2.disconnect()
+pgc.disconnect()
+</code></pre>
+<h2 id="edit-data">Edit data</h2>
+<p>The examples in this section use the table <code>d.points</code> created in the <a href="#create-an-example-table">create a table</a> section. This table has the fields <code>gid</code>, <code>description</code>, <code>deph</code> and <code>geom</code> fields. The <code>geom</code> field is a PostGIS <a href="http://postgis.net/workshops/postgis-intro/geometries.html/" target="_blank">geomerty</a> field type, of type <code>POINT</code> in the SRC <code>25831</code>. </p>
+<blockquote>
+<p><strong><em>NOTE:</em></strong>  It is not necessary to have a geometry field in the tables to use the pgOperations module.</p>
+</blockquote>
+<p>Also, in the next examples it is supposed the <code>pgOperations</code> module has been imported, 
+stored in the <code>pg</code> variable, and there is
+a <a href="../reference/#src.pgOperations.pgOperations.PgOperations" target="_blank">PgOperations</a>  instance stored in the variable called ´pgo´:</p>
+<pre><code>from pgOperations import pgOperations as pg
+oCon=pg.PgConnect(database="pgoperationstest", user="postgres", 
+        password="postgres", host="localhost", port="5432")
+pgo=pg.PgOperations(pgConnection=oCon,global_print_queries=True))
+</code></pre>
+<p><strong>This library supposes all python dictionary keys match with the table field names</strong>.</p>
+<h3 id="insert">Insert</h3>
+<p>To insert you can use the method <a href="../reference/#src.pgOperations.pgOperations.PgOperations.pgInsert" target="_blank">PgOperations.pgInsert</a>. In the next sections you will
+ see different use cases.</p>
+<h4 id="example-without-postgis-geometry-field">Example without PostGIS geometry field</h4>
+<p>Example with automatic generation of the SQL expression, using a dictionary,
+where the key names must be match with the table field name. The order is 
+indifferent. In this case there is not geometry field:</p>
+<pre><code>d={"description": "water well", "depth": 12.15}
+fieldsAndValues=pg.FieldsAndValues(d=d)
+resp=pgo.pgInsert(table_name="d.points", fieldsAndValues=fieldsAndValues, 
+        str_fields_returning="gid")
+print(resp)
+</code></pre>
+<p>The outputs are the following:</p>
+<pre><code>pgInsert
+Query:  insert into d.points (description,depth) values (%s,%s) returning gid
+Values:  ['water well', 12.15]
+[{'gid': 1}]
+</code></pre>
+<p>Below the prints are explained:</p>
+<ul>
+<li>
+<p>The first three prints are printed because the sentence <code>global_print_queries</code> 
+  was set to <code>True</code> on creating the object <code>pgo</code>. It prints the SQL sentence 
+  to execute with a <code>Psycopg2</code> cursor:
+  <code>'insert into d.points (description,depth) values (%s,%s) returning gid'</code>.
+  The method also prints the values to be used: <code>['water well', 12.15]</code>.</p>
+</li>
+<li>
+<p>The last print <code>[{'gid': 1}]</code> shows the returned value. The returned value
+can be an empty list, or several fields values, 
+specified in the parameter <code>str_fields_returning="gid"</code>, in a dictionary.</p>
+</li>
+</ul>
+<h4 id="example-with-a-postgis-geometry-field">Example with a PostGIS geometry field</h4>
+<p>In this example the coordinates of the geometry are in the SRC EPSG 25830,
+but the table requires the SRC EPSG 25831. The example reprojects the coordinates
+to be able to be inserted in the table. This is not necessary if the
+original coordinates of the geometry match with the SRC of the geometry
+field of the table.</p>
+<pre><code>d={"description": "water well", "depth": 12.15, "geom": "POINT(100 200)"}
+geometryFieldOptions=pg.GeometryFieldOptions(geom_field_name="geom", 
+        epsg='25830',epsg_to_reproject="25831")
+fieldsAndValues=pg.FieldsAndValues(d=d, list_fields_to_remove=["depth"], 
+        geometryFieldOptions=geometryFieldOptions)
+resp=pgo.pgInsert(table_name="d.points", fieldsAndValues=fieldsAndValues, 
+        str_fields_returning="gid")
+print(resp)
+</code></pre>
+<p>The outputs are the following:
+    pgInsert
+    Query:  insert into d.points (description,geom) values (%s,st_transform(st_geometryfromtext(%s,25830),25831)) returning gid
+    Values:  ['water well', 'POINT(100 200)']
+    [{'gid': 2}]</p>
+<h4 id="example-generating-the-expressions-manually">Example generating the expressions manually</h4>
+<p>This example manually generates the expressions using the class 
+<a href="../reference/#src.pgOperations.pgOperations.FieldsAndValuesBase" target="_blank">FieldsAndValuesBase</a>,
+so you are free to write the SQL sentence, for more complicated cases.</p>
+<pre><code>fieldsAndValuesBase=pg.FieldsAndValuesBase(
+    str_field_names="depth, description, geom", 
+    list_field_values=[12.15, "water well","POINT(100 200)"], 
+    str_s_values="%s,%s,st_transform(st_geometryfromtext(%s,25830),25831)")
+
+resp=pgo.pgInsert(table_name="d.points", fieldsAndValues=fieldsAndValuesBase, 
+        str_fields_returning="gid")
+print(resp)
+</code></pre>
+<p>Result:</p>
+<pre><code>pgInsert
+Query:  insert into d.points (depth, description, geom) values (%s,%s,st_transform(st_geometryfromtext(%s,25830),25831)) returning gid
+Values:  [12.15, 'water well', 'POINT(100 200)']
+[{'gid': 3}]
+</code></pre>
+<h3 id="update">Update</h3>
+<p>To update a table you can use the method <a href="../reference/#src.pgOperations.pgOperations.PgOperations.pgUpdate" target="_blank">PgOperations.pgUpdate</a>. In the next sections you will
+ see different use cases.</p>
+<h4 id="example-using-a-python-dictionary">Example using a Python dictionary</h4>
+<p>The following example updates al the rows where <code>gid=1</code>, and only updates the field <code>geom</code> because the
+field <code>description</code> is elimitated:</p>
+<pre><code>d={"description": "water well2", "geom": "POINT(300 300)"}
+geometryFieldOptions=pg.GeometryFieldOptions(
+    geom_field_name="geom",epsg=25831
+)
+fieldsAndValues=pg.FieldsAndValues( d=d, 
+                                    list_fields_to_remove=['description'], 
+                                    geometryFieldOptions=geometryFieldOptions
+                                    )
+whereClause=pg.WhereClause(where_clause="gid=%s", where_values_list=[1])
+resp=pgo.pgUpdate(table_name="d.points", 
+                  fieldsAndValues=fieldsAndValues, 
+                  whereClause=whereClause)
+print (resp)
+</code></pre>
+<p>The result of the previous listing is:</p>
+<pre><code>pgUpdate
+Query: update d.points set (geom) = row(st_geometryfromtext(%s,25831)) where gid=%s
+where_clause:  gid=%s
+where_values_list [1]
+New field values:  ['POINT(300 300)']
+Number of rows updated:  1
+1
+</code></pre>
+<p>The returned value was <code>1</code> therefore only one row has been updated.</p>
+<h4 id="example-generating-the-sql-expression-manually">Example generating the SQL expression manually</h4>
+<p>Next example updates the fields <code>description</code> and <code>geom</code>, generating the expression 
+manually:</p>
+<pre><code>fieldsAndValuesBase=pg.FieldsAndValuesBase(
+    str_field_names="description, geom", 
+    list_field_values=["water well updated","POINT(300 300)"], 
+    str_s_values="%s,st_transform(st_geometryfromtext(%s,25830),25831)")
+whereClause=pg.WhereClause(where_clause="gid=%s", where_values_list=[1])
+resp=pgo.pgUpdate(table_name="d.points", 
+                  fieldsAndValues=fieldsAndValuesBase, 
+                  whereClause=whereClause
+                  )
+print (resp)
+</code></pre>
+<p>The result of the previous listing is:</p>
+<pre><code>pgUpdate
+Query: update d.points set (description, geom) = row(%s,st_transform(st_geometryfromtext(%s,25830),25831)) where gid=%s
+where_clause:  gid=%s
+where_values_list [1]
+New field values:  ['water well updated', 'POINT(300 300)']
+Number of rows updated:  1
+1
+</code></pre>
+<p>One row has been updated.</p>
+<h3 id="select">Select</h3>
+<p>To select you can use the method <a href="../reference/#src.pgOperations.pgOperations.PgOperations.pgSelect" target="_blank">PgOperations.pgSelect</a>. In the next listing you will
+find an example.</p>
+<p>The pgSelect method returns the selected rows as list of dictionaries, or as list of tuples. 
+Each element of the list represents a selected row.</p>
+<p>Example:</p>
+<pre><code>whereClause=pg.WhereClause(where_clause='gid &gt; %s and gid &lt; %s', where_values_list=[0, 3])
+resp=pgo.pgSelect(table_name="d.points", 
+                  string_fields_to_select='gid,depth,description,st_astext(geom)',
+                  whereClause=whereClause,
+                  print_query=False,
+                  orderBy='gid desc'
+                  )
+print(resp)
+</code></pre>
+<p>The result of the previous command is:</p>
+<pre><code>pgSelect 
+Query:  SELECT array_to_json(array_agg(registros)) FROM 
+    (select gid,depth,description,st_astext(geom) from d.points  where gid &gt; %s and gid &lt; %s  order by gid desc limit 100) as registros
+where_clause:  gid &gt; %s and gid &lt; %s
+where_values_list [0, 3]
+Num of selected rows:  2
+[
+    {'gid': 2, 'depth': None, 'description': 'water well', 'st_astext': 'POINT(-673652.1897909392 202.79364615897794)'}, 
+    {'gid': 1, 'depth': 12.15, 'description': 'water well updated', 'st_astext': 'POINT(-673449.3960596526 304.1894476513122)'}
+]
+Num of selected rows:  2
+</code></pre>
+<p>In the above example, if you set the parameter <code>get_rows_as_dicts</code> to false, 
+the result is a list of tuples:</p>
+<pre><code>[
+    (2, None, 'water well', 'POINT(-673652.1897909392 202.79364615897794)'), 
+    (1, None, 'water well updated', 'POINT(-673449.3960596526 304.1894476513122)')
+]
+</code></pre>
+<h3 id="delete">Delete</h3>
+<p>To delete you can use the method <a href="../reference/#src.pgOperations.pgOperations.PgOperations.pgDelete" target="_blank">PgOperations.pgDelete</a>. In the next listing you will
+find an example.</p>
+<pre><code>whereClause=pg.WhereClause(where_clause='gid &lt; %s', where_values_list=[3])
+resp=pgo.pgDelete(table_name="d.points",whereClause=whereClause,print_query=False)
+print(resp)
+</code></pre>
+<p>The result of the above example is:</p>
+<pre><code>pgDelete
+Query:  delete from d.points where gid &lt; %s
+where_clause:  gid &lt; %s
+where_values_list [3]
+Number of rows deleted:  2
+2
+</code></pre>
+<h2 id="other-utilities">Other utilities</h2>
+<h3 id="delete-rows-and-files">Delete rows and files</h3>
+<p>This utility deletes the selected rows, and their associated files in the hard disk.
+The rows have to have a field with the file names to delete. The file names
+can contain an absolute path, or a relative path. It is possible to complete
+relative paths with the parameter <code>base_path</code>.</p>
+<p>see the method <a href="../reference/#src.pgOperations.pgOperations.PgOperations.pgDeleteWithFiles" target="_blank">PgOperations.pgDeleteWithFiles</a> for mor details about the parameters.</p>
+<p><strong>This method only has been tested in Linux systems</strong>.</p>
+<p>As an example a new table is needed. To create the new table you can use 
+the <a class="autorefs autorefs-internal" href="../reference/#src.pgOperations.pgOperations.PgOperations.pgCreateTable">PgOperations.createTable</a> utility.</p>
+<pre><code>r=pgo.pgCreateTable(table_name_with_schema="d.customers",
+        fields_definition="gid serial, name varchar, img varchar",
+        delete_table_if_exists= True,print_query=False)
+</code></pre>
+<p>Now let insert some data:</p>
+<pre><code>d1={"name": "customer 1", "img": "image1.jpg"}
+d2={"name": "customer 2", "img": "image2.jpg"}
+d3={"name": "customer 3", "img": "image3.jpg"}
+l=[d1,d2,d3]
+for d in l:
+    fieldsAndValues=pg.FieldsAndValues(d=d)
+    r=pgo.pgInsert(table_name="d.customers",
+        fieldsAndValues=fieldsAndValues,
+        str_fields_returning="gid")
+    print("Customer inserted. gid: ", r[0]["gid"])
+</code></pre>
+<p>Suppose the images are im the folder <code>/home/user/app/media/customers/img</code>. 
+To delete all rows and all images:</p>
+<pre><code>r=pgo.pgDeleteWithFiles(table_name="d.customers",field_name_with_file_name="img",
+    base_path="/home/user/app/media/customers/img")
+</code></pre>
+<p>In the previous command as the <code>whereClause</code> is None, all the rows are selected.</p>
+<p>If in the folder <code>/home/user/app/media/customers/img</code> there are 
+only the files <code>image1.jpg</code> and <code>image2.jpg</code>, the result will be:</p>
+<pre><code>{'numOfRowsDeleted': 3, 'deletedFileNames': ["image1.jpg", "image2.jpg"], 
+'notDeletedFilenames': ['image3.jpg'], 
+'base_path': '/home/user/app/media/customers/img'}
+</code></pre>
+<h3 id="get-table-field-names">Get table field names</h3>
+<p>This utility returns the table field names as a string or as a list. Besides
+if the table has a geometry field, e.g. <code>geom</code>, this utility can return this
+field name as <code>geom</code>, <code>st_astext(geom)</code>, <code>st_asgeojson(geom)</code>, <code>st_transform(st_asgeojson(geom),givenEPSG)</code>, or <code>st_transform(st_astext(geom),givenEPSG)</code>. The objetive is, the output of
+this function, could be used as input for the parameter <code>list_fields_to_select</code>
+of the methods <a href="../reference/#src.pgOperations.pgOperations.PgOperations.pgSelect" target="_blank"> PgOperations.pgSelect</a> and <a href="../reference/#src.pgOperations.pgOperations.PgOperations.pgUpdate" target="_blank"> PgOperations.pgUpdate</a> </p>
+<p>It is very common not to update all the field values, as some of them are automatically set
+by the database, because they have default values, commonly <code>serials</code> or timestapm field <code>types</code>.
+Because that this utility allow to remove some fields of the output. Next example returns the
+all field names in a list:</p>
+<pre><code>r=pgo.pgGetTableFieldNames('d.points')
+</code></pre>
+<p>Results:</p>
+<pre><code>pgGetTableFieldNames
+Query:  SELECT column_name FROM information_schema.columns WHERE table_schema=%s and table_name = %s
+Fields list: ['gid', 'description', 'depth', 'geom']
+Field names:  ['gid', 'description', 'depth', 'geom']
+</code></pre>
+<p>Example to select all the field names, except <code>description</code>, getting the geometry as geojson and
+getting the result as string: </p>
+<pre><code>gf=pg.SelectGeometryFormat()
+gfo=pg.SelectGeometryFieldOptions(geom_field_name='geom',
+    select_geometry_format=gf.geojson,     
+    epsg_to_reproject='25831')
+r=pgo.pgGetTableFieldNames('d.points',gfo,
+    list_fields_to_remove=['description'],returnAsString=True)
+print('Field names: ', r)
+</code></pre>
+<p>Result:</p>
+<pre><code>pgGetTableFieldNames
+Query:  SELECT column_name FROM information_schema.columns WHERE table_schema=%s and table_name = %s
+Fields list: ['gid', 'depth', 'st_asgeojson(st_transform(geom,25831))']
+Field names:  gid,depth,st_asgeojson(st_transform(geom,25831))
+</code></pre>
+<p>Next example shows how to use the output of this method as input of 
+<a href="../reference/#src.pgOperations.pgOperations.PgOperations.pgSelect" 
+target="_blank"> PgOperations.pgSelect</a>:</p>
+<pre><code>gf=pg.SelectGeometryFormat()
+gfo=pg.SelectGeometryFieldOptions(geom_field_name='geom',select_geometry_format=gf.geojson, epsg_to_reproject='25831')
+fieldNames=pgo.pgGetTableFieldNames('d.points',gfo,list_fields_to_remove=['description'],returnAsString=True)
+print('Field names: ', fieldNames)
+wc=pg.WhereClause(where_clause='gid=%s',where_values_list=[3])
+res=pgo.pgSelect(table_name='d.points', string_fields_to_select=fieldNames,whereClause=wc)
+print('Selection result: ', res)
+</code></pre>
+<p>Results:</p>
+<pre><code>pgGetTableFieldNames
+Query:  SELECT column_name FROM information_schema.columns WHERE table_schema=%s and table_name = %s
+Fields list: ['gid', 'depth', 'st_asgeojson(st_transform(geom,25831))']
+Field names:  gid,depth,st_asgeojson(st_transform(geom,25831))
+pgSelect
+Query:  SELECT array_to_json(array_agg(registros)) FROM (select gid,depth,st_asgeojson(st_transform(geom,25831)) from d.points  where gid=%s   limit 100) as registros
+where_clause:  gid=%s
+where_values_list [3]
+Num of selected rows:  1
+Selection result:  [{'gid': 3, 'depth': 12.15, 'st_asgeojson': '{"type":"Point","crs":{"type":"name","properties":{"name":"EPSG:25831"}},"coordinates":[-673652.189790939,202.793646159]}'}]
+</code></pre>
+<h3 id="table-exists">Table exists</h3>
+<p>Returns True or False, depending on if the table exists in the database or not.
+table_name_with_schema: table name included the schema, e.g. "d.boundary". 
+See the <a href="../reference/#src.pgOperations.pgOperations.PgOperations.pgTableExists" 
+target="_blank"> PgOperations.pgTableExists</a> method documentation for more details:</p>
+<p>Example:</p>
+<pre><code>res=pgo.pgTableExists(table_name_with_schema='d.points')
+print('Table exists: ', res)
+</code></pre>
+<p>Result:</p>
+<pre><code>Table exists
+pgTableExists
+Query: SELECT EXISTS (SELECT 1 FROM   information_schema.tables WHERE  table_schema = %s AND    table_name = %s)
+Table exists:  True
+</code></pre>
+<h3 id="value-exists-in-field">Value exists in field</h3>
+<p>It is very common check if a value exists in a column. For example in the case of
+users, or emails. This function returns <code>True</code> or <code>False</code>,
+ depending whether or not if a value exists in a column. 
+See the <a href="../reference/#src.pgOperations.pgOperations.PgOperations.pgValueExists" 
+target="_blank"> PgOperations.pgValueExists</a> method documentation for more details:</p>
+<p>Example:</p>
+<p>res=pgo.pgValueExists(table_name_with_schema='d.points',field_name='gid',field_value= 3)</p>
+<p>Result:</p>
+<pre><code>pgValueExists
+Query:  SELECT exists (SELECT gid FROM d.points WHERE gid = %s LIMIT 1)
+Field name: 'gid'. Field value: 3
+Exists:  True
+Value exists: True
+</code></pre>
+<h3 id="manage-counters">Manage counters</h3>
+<p>This module has a class, called 
+<a href="../reference/#src.pgOperations.pgOperations.PgCounters" 
+target="_blank"> PgCounters</a> to manage counters. See the class method
+documentations to get more details.</p>
+<p>Use the method <a href="../reference/#src.pgOperations.pgOperations.PgCounters.addCounter" 
+target="_blank"> PgCounters.addCounter</a> to create a counter:</p>
+<pre><code>counter_name = 'c1'
+c=pg.PgCounters(pgo)
+c.addCounter(counter_name,counter_name + ' description')
+</code></pre>
+<p>Results:</p>
+<pre><code>Add counter
+pgTableExists #pgTable exists call to check if the table counters.counters exists
+Query: SELECT EXISTS (SELECT 1 FROM   information_schema.tables WHERE  table_schema = %s AND    table_name = %s)
+addCounter #add counter prints
+Create sequence:  create sequence counters.c1 as integer start with %s increment by %s
+pgInsert #pgInsert call to insert in the table counters.counters 
+Query:  insert into counters.counters (counter_name,counter_description) values (%s,%s)
+Values:  ['c1', 'c1 description']
+</code></pre>
+<p>Use the method <a href="../reference/#src.pgOperations.pgOperations.PgCounters.incrementCounter" 
+target="_blank"> PgCounters.incrementCounter</a> to increment a counter:</p>
+<pre><code>v1=c.incrementCounter(counter_name)
+print('Returned value 1: ',v1)
+</code></pre>
+<p>Results:</p>
+<pre><code>incrementCounter
+Query:  select nextval(%s)
+Current counter value:  1
+Returned value 1:  1
+</code></pre>
+<p>Use the method <a href="../reference/#src.pgOperations.pgOperations.PgCounters.getCounterValue" 
+target="_blank"> PgCounters.getCounterValue</a> to get the counter value:</p>
+<pre><code>r1=c.getCounterValue(counter_name)
+print('Returned value 3: ',r1)
+</code></pre>
+<p>Results:</p>
+<pre><code>getCounterValue
+Quer: y select last_value from counters.c1
+Current counter value:  1
+Returned value 3:  1
+</code></pre>
+<p>Use the method <a href="../reference/#src.pgOperations.pgOperations.PgCounters.getAllCounters" 
+target="_blank">PgCounters.getAllCounters</a> to get all the counters, its description, and values:</p>
+<pre><code>r=c.getAllCounters()
+print('All counters: ',r)
+</code></pre>
+<p>The results, after having added another, counter and having incremented them, 
+are the following:</p>
+<pre><code>...
+#prints of other PgOperations method calls inside the method getAllCounters
+...
+All counters:  [
+    {'gid': 17, 'counter_name': 'c1', 'counter_description': 'c1 description', 'value': 2}, 
+    {'gid': 18, 'counter_name': 'c2', 'counter_description': 'c2 description', 'value': 2}
+]
+</code></pre>
+<p>Use the method <a href="../reference/#src.pgOperations.pgOperations.PgCounters.deleteCounter" 
+target="_blank">PgCounters.deleteCounter</a> to delete a counter:</p>
+<pre><code>n=c.deleteCounter('c1')
+</code></pre>
+<p>And the results are the following:</p>
+<pre><code>pgDelete #the method calls pgDelete to remove the 
+    corresponding row in counters.counters
+Query:  delete from counters.counters where counter_name=%s
+where_clause:  counter_name=%s
+where_values_list ['c1']
+Number of rows deleted:  1
+deleteCounter #the deleteCounter prints start here
+Query drop sequence if exists counters.c1
+Sequences deleted:  1
+</code></pre>
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+    <nav class="md-footer__inner md-grid" aria-label="Footer" >
+      
+        
+        <a href=".." class="md-footer__link md-footer__link--prev" aria-label="Previous: Index" rel="prev">
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+          </div>
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              Index
+            </div>
+          </div>
+        </a>
+      
+      
+        
+        <a href="../reference/" class="md-footer__link md-footer__link--next" aria-label="Next: Reference" rel="next">
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              Reference
+            </div>
+          </div>
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4Z"/></svg>
+          </div>
+        </a>
+      
+    </nav>
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    <script id="__config" type="application/json">{"base": "..", "features": [], "search": "../assets/javascripts/workers/search.16e2a7d4.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version.title": "Select version"}}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.d6c3db9e.min.js"></script>
+      
+    
+  </body>
+</html>
