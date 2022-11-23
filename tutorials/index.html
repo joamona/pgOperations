@@ -733,11 +733,12 @@ resp=pgo.pgInsert(table_name="d.points", fieldsAndValues=fieldsAndValues,
         str_fields_returning="gid")
 print(resp)
 </code></pre>
-<p>The outputs are the following:
-    pgInsert
-    Query:  insert into d.points (description,geom) values (%s,st_transform(st_geometryfromtext(%s,25830),25831)) returning gid
-    Values:  ['water well', 'POINT(100 200)']
-    [{'gid': 2}]</p>
+<p>The outputs are the following:</p>
+<pre><code>pgInsert
+Query:  insert into d.points (description,geom) values (%s,st_transform(st_geometryfromtext(%s,25830),25831)) returning gid
+Values:  ['water well', 'POINT(100 200)']
+[{'gid': 2}]
+</code></pre>
 <h4 id="example-generating-the-expressions-manually">Example generating the expressions manually</h4>
 <p>This example manually generates the expressions using the class 
 <a href="../reference/#src.pgOperations.pgOperations.FieldsAndValuesBase" target="_blank">FieldsAndValuesBase</a>,
