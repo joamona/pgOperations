@@ -9,7 +9,7 @@ authors = [
 ]
 description = "Simple tool to perform the most common operations in PostgreSQL and PostGIS with Psycopg2 without writing SQL code. Builds the SQL queries from Pyhton dictionaries."
 readme = "README.md"
-requires-python = ">=3.7"
+requires-python = ">=3"
 classifiers = [
     "Programming Language :: Python :: 3",
     "License :: OSI Approved :: GNU General Public License (GPL)",

@@ -304,7 +304,7 @@ def addCounter(counter_name):
     print('Add counter')
     oCon=pg.PgConnect(database="pgoperationstest", user="postgres", password="postgres", host="localhost", port="5432")  
     pgo=pg.PgOperations(pgConnection=oCon, global_print_queries=global_print_queries)
-    c=pg.Counters(pgo)
+    c=pg.PgCounters(pgo)
     c.addCounter(counter_name,counter_name + ' description')
     v1=c.incrementCounter(counter_name)
     print('Returned value 1: ',v1)
@@ -319,7 +319,7 @@ def addCounter(counter_name):
 def deleteCounter(counter_name):
     oCon=pg.PgConnect(database="pgoperationstest", user="postgres", password="postgres", host="localhost", port="5432")  
     pgo=pg.PgOperations(pgConnection=oCon, global_print_queries=global_print_queries)
-    c=pg.Counters(pgo)
+    c=pg.PgCounters(pgo)
     n=c.deleteCounter(counter_name)
 
 if __name__=="__main__":
