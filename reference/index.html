@@ -1040,30 +1040,20 @@
 
   <h1>Reference</h1>
 
-<p>This part of the project documentation focuses on
-an <strong>information-oriented</strong> approach. Use it as a
-reference for the technical implementation of the
-<code>calculator</code> project code.</p>
-
-
-  <div class="doc doc-object doc-module">
+<div class="doc doc-object doc-module">
 
 <a id="src.pgOperations.pgOperations"></a>
     <div class="doc doc-contents first">
 
       <h2 id="src.pgOperations.pgOperations--pgoperations-module">pgOperations module</h2>
-<p>A simple and light weight module to perform operations in PostgreSQL and PostGIS</p>
-<p>author: Gaspar Mora-Navarro</p>
-<p>Universitat Politècnica de València</p>
-<p>Department of Cartographic Engineering Geodesy and Photogrammetry</p>
-<p>Higher Technical School of Geodetic, Cartographic and Topographical Engineering</p>
-<p>joamona@cgf.upv.es</p>
+<p>A simple and light weight module to perform operations in PostgreSQL and PostGIS.</p>
 <p>This module facilitates to perform the most common operations: 
 insert, delete, update, select, create and delete databases.</p>
 <p>The class methods receive Python dictionaries, create the SQL sentences and perform the operations.
 The methods are able to work also with PostGIS geometries, using WKT representations.</p>
-<p>This library depends of the psycopg2 library (http://initd.org/psycopg/).</p>
-<p>This library uses Python &gt;= 3</p>
+<p>This library depends on the 
+<a href="https://www.psycopg.org/" target="_blank">psycopg2</a> library.</p>
+<p>This library requires Python &gt;= 3</p>
 
 
 
@@ -1115,12 +1105,17 @@ FieldsAndValues            (<a class="autorefs autorefs-internal" title="src.pgO
         <span class="sd">&quot;&quot;&quot;Constructor               </span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            d: Dictionary key-value, where the keys are the name fields and the values the value fields of a table,</span>
+<span class="sd">            d: Dictionary key-value, where the keys are the names of the table fields, </span>
+<span class="sd">                and the values the values of the fields,</span>
 <span class="sd">                e.g. {&quot;depth&quot;:12.15, &quot;description&quot;:&quot;water well&quot;, &quot;geom&quot;:&quot;LINESTRING(100 200, 200 200)&quot;}.</span>
 <span class="sd">                It is not necessary to have a geometry field in the dictionary.</span>
 <span class="sd">                If there is a geometry field, the value must be in </span>
 <span class="sd">                &lt;a href=&quot;https://en.wikipedia.org/wiki/Well-known_text_representation_of_geometry&quot; </span>
-<span class="sd">                    target=&quot;_blank&quot;&gt;WKT&lt;/a&gt; format.</span>
+<span class="sd">                    target=&quot;_blank&quot;&gt;WKT&lt;/a&gt; format. The other details of the geometry,</span>
+<span class="sd">                    as the SRC of the geometry, must be specified in</span>
+<span class="sd">                    an instance of the </span>
+<span class="sd">                    [GeometryFieldOptions][src.pgOperations.pgOperations.GeometryFieldOptions] class,</span>
+<span class="sd">                    in the parameter geometryFieldOptions of this contructor.</span>
 <span class="sd">            list_fields_to_remove: list with the dictionary keys to exclude of the SQL expression.</span>
 <span class="sd">                The corresponding field for the row in the table will not be affected by the insertion,</span>
 <span class="sd">                or update.</span>
@@ -1130,8 +1125,10 @@ FieldsAndValues            (<a class="autorefs autorefs-internal" title="src.pgO
 <span class="sd">                Set to None if you do not want to remove any field.</span>
 <span class="sd">                If the field to remove is not in the dictionary `d` any error will be raised.</span>
 <span class="sd">            geometryFieldOptions: If there is a geometry field in the table,</span>
-<span class="sd">                    this object gives the details of the geometry: the field name, the SRC,</span>
-<span class="sd">                    and the new SRC, in case of a reprojections be required.</span>
+<span class="sd">                    a [GeometryFieldOptions][src.pgOperations.pgOperations.GeometryFieldOptions] </span>
+<span class="sd">                    class instance must be created, to give the details of the geometry: </span>
+<span class="sd">                    the field name, the SRC,</span>
+<span class="sd">                    and the new SRC, in case of a reprojection be required.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">__dict_to_string_fields_and_vector_values</span><span class="p">(</span>
             <span class="n">d</span><span class="p">,</span> <span class="n">list_fields_to_remove</span><span class="p">,</span> <span class="n">geometryFieldOptions</span><span class="p">)</span>
@@ -1234,12 +1231,17 @@ FieldsAndValues            (<a class="autorefs autorefs-internal" title="src.pgO
       <tr>
         <td><code>d</code></td>
         <td><code>dict</code></td>
-        <td><p>Dictionary key-value, where the keys are the name fields and the values the value fields of a table,
+        <td><p>Dictionary key-value, where the keys are the names of the table fields, 
+and the values the values of the fields,
 e.g. {"depth":12.15, "description":"water well", "geom":"LINESTRING(100 200, 200 200)"}.
 It is not necessary to have a geometry field in the dictionary.
 If there is a geometry field, the value must be in 
 <a href="https://en.wikipedia.org/wiki/Well-known_text_representation_of_geometry" 
-    target="_blank">WKT</a> format.</p></td>
+    target="_blank">WKT</a> format. The other details of the geometry,
+    as the SRC of the geometry, must be specified in
+    an instance of the 
+    <a class="autorefs autorefs-internal" href="#src.pgOperations.pgOperations.GeometryFieldOptions">GeometryFieldOptions</a> class,
+    in the parameter geometryFieldOptions of this contructor.</p></td>
         <td><em>required</em></td>
       </tr>
       <tr>
@@ -1259,8 +1261,10 @@ If the field to remove is not in the dictionary <code>d</code> any error will be
         <td><code>geometryFieldOptions</code></td>
         <td><code>GeometryFieldOptions</code></td>
         <td><p>If there is a geometry field in the table,
-    this object gives the details of the geometry: the field name, the SRC,
-    and the new SRC, in case of a reprojections be required.</p></td>
+    a <a class="autorefs autorefs-internal" href="#src.pgOperations.pgOperations.GeometryFieldOptions">GeometryFieldOptions</a> 
+    class instance must be created, to give the details of the geometry: 
+    the field name, the SRC,
+    and the new SRC, in case of a reprojection be required.</p></td>
         <td><code>None</code></td>
       </tr>
   </tbody>
@@ -1272,12 +1276,17 @@ If the field to remove is not in the dictionary <code>d</code> any error will be
     <span class="sd">&quot;&quot;&quot;Constructor               </span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        d: Dictionary key-value, where the keys are the name fields and the values the value fields of a table,</span>
+<span class="sd">        d: Dictionary key-value, where the keys are the names of the table fields, </span>
+<span class="sd">            and the values the values of the fields,</span>
 <span class="sd">            e.g. {&quot;depth&quot;:12.15, &quot;description&quot;:&quot;water well&quot;, &quot;geom&quot;:&quot;LINESTRING(100 200, 200 200)&quot;}.</span>
 <span class="sd">            It is not necessary to have a geometry field in the dictionary.</span>
 <span class="sd">            If there is a geometry field, the value must be in </span>
 <span class="sd">            &lt;a href=&quot;https://en.wikipedia.org/wiki/Well-known_text_representation_of_geometry&quot; </span>
-<span class="sd">                target=&quot;_blank&quot;&gt;WKT&lt;/a&gt; format.</span>
+<span class="sd">                target=&quot;_blank&quot;&gt;WKT&lt;/a&gt; format. The other details of the geometry,</span>
+<span class="sd">                as the SRC of the geometry, must be specified in</span>
+<span class="sd">                an instance of the </span>
+<span class="sd">                [GeometryFieldOptions][src.pgOperations.pgOperations.GeometryFieldOptions] class,</span>
+<span class="sd">                in the parameter geometryFieldOptions of this contructor.</span>
 <span class="sd">        list_fields_to_remove: list with the dictionary keys to exclude of the SQL expression.</span>
 <span class="sd">            The corresponding field for the row in the table will not be affected by the insertion,</span>
 <span class="sd">            or update.</span>
@@ -1287,8 +1296,10 @@ If the field to remove is not in the dictionary <code>d</code> any error will be
 <span class="sd">            Set to None if you do not want to remove any field.</span>
 <span class="sd">            If the field to remove is not in the dictionary `d` any error will be raised.</span>
 <span class="sd">        geometryFieldOptions: If there is a geometry field in the table,</span>
-<span class="sd">                this object gives the details of the geometry: the field name, the SRC,</span>
-<span class="sd">                and the new SRC, in case of a reprojections be required.</span>
+<span class="sd">                a [GeometryFieldOptions][src.pgOperations.pgOperations.GeometryFieldOptions] </span>
+<span class="sd">                class instance must be created, to give the details of the geometry: </span>
+<span class="sd">                the field name, the SRC,</span>
+<span class="sd">                and the new SRC, in case of a reprojection be required.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">__dict_to_string_fields_and_vector_values</span><span class="p">(</span>
         <span class="n">d</span><span class="p">,</span> <span class="n">list_fields_to_remove</span><span class="p">,</span> <span class="n">geometryFieldOptions</span><span class="p">)</span>
@@ -1499,7 +1510,7 @@ methods <a class="autorefs autorefs-internal" href="#src.pgOperations.pgOperatio
 <a class="autorefs autorefs-internal" href="#src.pgOperations.pgOperations.PgOperations.pgUpdate">pgUpdate</a>. </p>
 <p>With this class you can set the geometry field name, the current SRC of the geometry, 
 and the new SRC, in case you want ro reproject it. The SRC must be a
-<a href="https://epsg.io/" target="_blank">EPSG</a> code.</p>
+<a href="https://epsg.io/" >EPSG</a> code.</p>
 
         <details class="quote">
           <summary>Source code in <code>pgOperations/pgOperations.py</code></summary>
@@ -1510,12 +1521,12 @@ and the new SRC, in case you want ro reproject it. The SRC must be a
 
 <span class="sd">    With this class you can set the geometry field name, the current SRC of the geometry, </span>
 <span class="sd">    and the new SRC, in case you want ro reproject it. The SRC must be a</span>
-<span class="sd">    &lt;a href=&quot;https://epsg.io/&quot; target=&quot;_blank&quot;&gt;EPSG&lt;/a&gt; code.</span>
+<span class="sd">    &lt;a href=&quot;https://epsg.io/&quot; &gt;EPSG&lt;/a&gt; code.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">geom_field_name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> 
     <span class="n">epsg</span><span class="o">=</span><span class="kc">None</span>
     <span class="n">epsg_to_reproject</span><span class="o">=</span><span class="kc">None</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">geom_field_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;geom&#39;</span><span class="p">,</span><span class="n">epsg</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">epsg</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span> <span class="n">geom_field_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;geom&#39;</span><span class="p">,</span>
          <span class="n">epsg_to_reproject</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Constructor</span>
 
@@ -1525,9 +1536,8 @@ and the new SRC, in case you want ro reproject it. The SRC must be a
 <span class="sd">                    epsg=&#39;25830&#39;,epsg_to_reproject=&quot;25831&quot;)</span>
 
 <span class="sd">        Args:</span>
-
-<span class="sd">            geom_field_name: Table geometry field name.</span>
 <span class="sd">            epsg: Current EPSG SRC code of the geometry.</span>
+<span class="sd">            geom_field_name: Table geometry field name.</span>
 <span class="sd">            epsg_to_reproject: On inserting or getting the geometry, the</span>
 <span class="sd">                geometry will be reprojected to this new SRC.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -1558,7 +1568,7 @@ and the new SRC, in case you want ro reproject it. The SRC must be a
 
 
 <h3 id="src.pgOperations.pgOperations.GeometryFieldOptions.__init__" class="doc doc-heading">
-<code class="highlight language-python"><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">geom_field_name</span><span class="o">=</span><span class="s1">&#39;geom&#39;</span><span class="p">,</span> <span class="n">epsg</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">epsg_to_reproject</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
+<code class="highlight language-python"><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">epsg</span><span class="p">,</span> <span class="n">geom_field_name</span><span class="o">=</span><span class="s1">&#39;geom&#39;</span><span class="p">,</span> <span class="n">epsg_to_reproject</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
 
   <span class="doc doc-properties">
       <small class="doc doc-property doc-property-special"><code>special</code></small>
@@ -1587,16 +1597,16 @@ and the new SRC, in case you want ro reproject it. The SRC must be a
   </thead>
   <tbody>
       <tr>
+        <td><code>epsg</code></td>
+        <td><code>Union[str, int]</code></td>
+        <td><p>Current EPSG SRC code of the geometry.</p></td>
+        <td><em>required</em></td>
+      </tr>
+      <tr>
         <td><code>geom_field_name</code></td>
         <td><code>str</code></td>
         <td><p>Table geometry field name.</p></td>
         <td><code>&#39;geom&#39;</code></td>
-      </tr>
-      <tr>
-        <td><code>epsg</code></td>
-        <td><code>Union[str, int]</code></td>
-        <td><p>Current EPSG SRC code of the geometry.</p></td>
-        <td><code>None</code></td>
       </tr>
       <tr>
         <td><code>epsg_to_reproject</code></td>
@@ -1609,7 +1619,7 @@ geometry will be reprojected to this new SRC.</p></td>
 </table>
         <details class="quote">
           <summary>Source code in <code>pgOperations/pgOperations.py</code></summary>
-          <div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">geom_field_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;geom&#39;</span><span class="p">,</span><span class="n">epsg</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+          <div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">epsg</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span> <span class="n">geom_field_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;geom&#39;</span><span class="p">,</span>
      <span class="n">epsg_to_reproject</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Constructor</span>
 
@@ -1619,9 +1629,8 @@ geometry will be reprojected to this new SRC.</p></td>
 <span class="sd">                epsg=&#39;25830&#39;,epsg_to_reproject=&quot;25831&quot;)</span>
 
 <span class="sd">    Args:</span>
-
-<span class="sd">        geom_field_name: Table geometry field name.</span>
 <span class="sd">        epsg: Current EPSG SRC code of the geometry.</span>
+<span class="sd">        geom_field_name: Table geometry field name.</span>
 <span class="sd">        epsg_to_reproject: On inserting or getting the geometry, the</span>
 <span class="sd">            geometry will be reprojected to this new SRC.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -1693,7 +1702,8 @@ real utilities of this library.</p>
 
 <span class="sd">        Examples:</span>
 <span class="sd">            &gt;&gt;&gt; from pgOperations import pgOperations as pg</span>
-<span class="sd">            &gt;&gt;&gt; pgc=pg.PgConnect(database=&#39;pgoperationstest&#39;, user=&quot;postgres&quot;, password=&quot;postgres&quot;, host=&quot;localhost&quot;,port=5432)</span>
+<span class="sd">            &gt;&gt;&gt; pgc=pg.PgConnect(database=&#39;pgoperationstest&#39;, user=&quot;postgres&quot;, </span>
+<span class="sd">            &gt;&gt;&gt;     password=&quot;postgres&quot;, host=&quot;localhost&quot;,port=5432)</span>
 <span class="sd">            &gt;&gt;&gt; pgo=pg.PgOperations(pgConnection=pgc)</span>
 <span class="sd">            &gt;&gt;&gt; pgc.disconnect()</span>
 
@@ -1750,7 +1760,8 @@ real utilities of this library.</p>
 
 <p><strong>Examples:</strong></p>
     <div class="highlight"><pre><span></span><code><span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span> <span class="nn">pgOperations</span> <span class="kn">import</span> <span class="n">pgOperations</span> <span class="k">as</span> <span class="n">pg</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">pgc</span><span class="o">=</span><span class="n">pg</span><span class="o">.</span><span class="n">PgConnect</span><span class="p">(</span><span class="n">database</span><span class="o">=</span><span class="s1">&#39;pgoperationstest&#39;</span><span class="p">,</span> <span class="n">user</span><span class="o">=</span><span class="s2">&quot;postgres&quot;</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="s2">&quot;postgres&quot;</span><span class="p">,</span> <span class="n">host</span><span class="o">=</span><span class="s2">&quot;localhost&quot;</span><span class="p">,</span><span class="n">port</span><span class="o">=</span><span class="mi">5432</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">pgc</span><span class="o">=</span><span class="n">pg</span><span class="o">.</span><span class="n">PgConnect</span><span class="p">(</span><span class="n">database</span><span class="o">=</span><span class="s1">&#39;pgoperationstest&#39;</span><span class="p">,</span> <span class="n">user</span><span class="o">=</span><span class="s2">&quot;postgres&quot;</span><span class="p">,</span> 
+<span class="o">&gt;&gt;&gt;</span>     <span class="n">password</span><span class="o">=</span><span class="s2">&quot;postgres&quot;</span><span class="p">,</span> <span class="n">host</span><span class="o">=</span><span class="s2">&quot;localhost&quot;</span><span class="p">,</span><span class="n">port</span><span class="o">=</span><span class="mi">5432</span><span class="p">)</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="n">pgo</span><span class="o">=</span><span class="n">pg</span><span class="o">.</span><span class="n">PgOperations</span><span class="p">(</span><span class="n">pgConnection</span><span class="o">=</span><span class="n">pgc</span><span class="p">)</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="n">pgc</span><span class="o">.</span><span class="n">disconnect</span><span class="p">()</span>
 </code></pre></div>
@@ -1805,7 +1816,8 @@ real utilities of this library.</p>
 
 <span class="sd">    Examples:</span>
 <span class="sd">        &gt;&gt;&gt; from pgOperations import pgOperations as pg</span>
-<span class="sd">        &gt;&gt;&gt; pgc=pg.PgConnect(database=&#39;pgoperationstest&#39;, user=&quot;postgres&quot;, password=&quot;postgres&quot;, host=&quot;localhost&quot;,port=5432)</span>
+<span class="sd">        &gt;&gt;&gt; pgc=pg.PgConnect(database=&#39;pgoperationstest&#39;, user=&quot;postgres&quot;, </span>
+<span class="sd">        &gt;&gt;&gt;     password=&quot;postgres&quot;, host=&quot;localhost&quot;,port=5432)</span>
 <span class="sd">        &gt;&gt;&gt; pgo=pg.PgOperations(pgConnection=pgc)</span>
 <span class="sd">        &gt;&gt;&gt; pgc.disconnect()</span>
 
@@ -1858,7 +1870,8 @@ PgConnection        </code>
       <p>Class to store a Psycopg2 connection and cursor, which are the objects
 used to perform the transactions in the database.</p>
 <p>This class do not do anything interesting, but an instance of this class, or an instance of 
-PgConnection, or PgConnect, is necessary to initialize the class PgOperations, which have the 
+<a class="autorefs autorefs-internal" href="#src.pgOperations.pgOperations.PgConnect">PgConnect</a>, are necessary to initialize 
+the class <a class="autorefs autorefs-internal" href="#src.pgOperations.pgOperations.PgOperations">PgOperations</a>, which have the 
 real utilities of this library.</p>
 <p>This class is the base class for the class <a class="autorefs autorefs-internal" href="#src.pgOperations.pgOperations.PgConnect">PgConnect</a>, 
 which allows creating the Psycopg2 connection with the user credentials.</p>
@@ -1870,7 +1883,8 @@ which allows creating the Psycopg2 connection with the user credentials.</p>
 <span class="sd">    used to perform the transactions in the database.</span>
 
 <span class="sd">    This class do not do anything interesting, but an instance of this class, or an instance of </span>
-<span class="sd">    PgConnection, or PgConnect, is necessary to initialize the class PgOperations, which have the </span>
+<span class="sd">    [PgConnect][src.pgOperations.pgOperations.PgConnect], are necessary to initialize </span>
+<span class="sd">    the class [PgOperations][src.pgOperations.pgOperations.PgOperations], which have the </span>
 <span class="sd">    real utilities of this library.</span>
 
 <span class="sd">    This class is the base class for the class [PgConnect][src.pgOperations.pgOperations.PgConnect], </span>
@@ -1901,10 +1915,11 @@ which allows creating the Psycopg2 connection with the user credentials.</p>
     <span class="k">def</span> <span class="nf">disconnect</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Closes the cursor and the connection. </span>
 
-<span class="sd">        It is important to close the connections because PostgreSQL has a limited number</span>
-<span class="sd">        of connections alive limited. In PostgreSQL, this number is configurable and also, there is a garbage</span>
-<span class="sd">        collector to close unused connections, but the recommendation is to close the connection once </span>
-<span class="sd">        you have finished.</span>
+<span class="sd">        It is important to close the connections because the number</span>
+<span class="sd">        of connections alive are limited. </span>
+<span class="sd">        In PostgreSQL, this number is configurable, and also there is</span>
+<span class="sd">         a garbage collector to close unused connections, but the recommendation </span>
+<span class="sd">        is to close the connection once you have finished to release resources.</span>
 
 <span class="sd">        The recommendation is use the connection to perform all the transactions you need, </span>
 <span class="sd">        commit the changes and close the Psycopg2 cursor and the connection.</span>
@@ -2085,10 +2100,11 @@ you have committed the transaction. You will not see the changes until you commi
     <div class="doc doc-contents ">
 
       <p>Closes the cursor and the connection. </p>
-<p>It is important to close the connections because PostgreSQL has a limited number
-of connections alive limited. In PostgreSQL, this number is configurable and also, there is a garbage
-collector to close unused connections, but the recommendation is to close the connection once 
-you have finished.</p>
+<p>It is important to close the connections because the number
+of connections alive are limited. 
+In PostgreSQL, this number is configurable, and also there is
+ a garbage collector to close unused connections, but the recommendation 
+is to close the connection once you have finished to release resources.</p>
 <p>The recommendation is use the connection to perform all the transactions you need, 
 commit the changes and close the Psycopg2 cursor and the connection.</p>
 
@@ -2097,10 +2113,11 @@ commit the changes and close the Psycopg2 cursor and the connection.</p>
           <div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">disconnect</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Closes the cursor and the connection. </span>
 
-<span class="sd">    It is important to close the connections because PostgreSQL has a limited number</span>
-<span class="sd">    of connections alive limited. In PostgreSQL, this number is configurable and also, there is a garbage</span>
-<span class="sd">    collector to close unused connections, but the recommendation is to close the connection once </span>
-<span class="sd">    you have finished.</span>
+<span class="sd">    It is important to close the connections because the number</span>
+<span class="sd">    of connections alive are limited. </span>
+<span class="sd">    In PostgreSQL, this number is configurable, and also there is</span>
+<span class="sd">     a garbage collector to close unused connections, but the recommendation </span>
+<span class="sd">    is to close the connection once you have finished to release resources.</span>
 
 <span class="sd">    The recommendation is use the connection to perform all the transactions you need, </span>
 <span class="sd">    commit the changes and close the Psycopg2 cursor and the connection.</span>
@@ -2142,14 +2159,15 @@ PgCounters        </code>
       <p>Counters are created as sequences, and the sequences are represented
 in the database as tables. The current value of the counters are get
 with the sentence <code>select last_value from sequence_name</code>.
-All the counters, or sequences, are stored in the schema counters.</p>
+All the counters, or sequences, are stored in the schema <code>counters</code>.</p>
 <p>Counters name should be given without the schema name.
-The schema <code>counters</code> ant the table <code>counters.counters</code> are automatically 
+The schema <code>counters</code> and the table <code>counters.counters</code> are automatically 
 created first time a counter is added. 
 The table <code>counters.counters</code> contains the counters name and a description.
-This table is used by the method <code>getAllCounters</code>, which lists all the counters,
-its description and its current value.</p>
-<p>Examples of use in <a href="../tutorials/#manage-counters">Manage counters</a>.</p>
+This table is used by the method <code>getAllCounters</code>, which lists all the counters name,
+description, and current value.</p>
+<p>You can find examples of use in the 
+<a href="../tutorials/#manage-counters">Manage counters</a> section.</p>
 
         <details class="quote">
           <summary>Source code in <code>pgOperations/pgOperations.py</code></summary>
@@ -2158,16 +2176,17 @@ its description and its current value.</p>
 <span class="sd">    Counters are created as sequences, and the sequences are represented</span>
 <span class="sd">    in the database as tables. The current value of the counters are get</span>
 <span class="sd">    with the sentence `select last_value from sequence_name`.</span>
-<span class="sd">    All the counters, or sequences, are stored in the schema counters.</span>
+<span class="sd">    All the counters, or sequences, are stored in the schema `counters`.</span>
 
 <span class="sd">    Counters name should be given without the schema name.</span>
-<span class="sd">    The schema `counters` ant the table `counters.counters` are automatically </span>
+<span class="sd">    The schema `counters` and the table `counters.counters` are automatically </span>
 <span class="sd">    created first time a counter is added. </span>
 <span class="sd">    The table `counters.counters` contains the counters name and a description.</span>
-<span class="sd">    This table is used by the method `getAllCounters`, which lists all the counters,</span>
-<span class="sd">    its description and its current value.</span>
+<span class="sd">    This table is used by the method `getAllCounters`, which lists all the counters name,</span>
+<span class="sd">    description, and current value.</span>
 
-<span class="sd">    Examples of use in &lt;a href=&quot;../tutorials/#manage-counters&quot;&gt;Manage counters&lt;/a&gt;.</span>
+<span class="sd">    You can find examples of use in the </span>
+<span class="sd">    &lt;a href=&quot;../tutorials/#manage-counters&quot;&gt;Manage counters&lt;/a&gt; section.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">counter_schema</span><span class="o">=</span><span class="s1">&#39;counters&#39;</span>
     <span class="n">counters_table</span><span class="o">=</span><span class="s1">&#39;counters.counters&#39;</span>
@@ -2194,10 +2213,13 @@ its description and its current value.</p>
 <span class="sd">        if they do not exist. Adds to the table `counters.counters` a row with</span>
 <span class="sd">        the counter name and the counter description.</span>
 
-<span class="sd">        If the counter already exists, an exception will be raised.</span>
+<span class="sd">        If the counter already exist, an exception will be raised.</span>
 
 <span class="sd">        If the schema `counters` or the table `counters.counters` already</span>
 <span class="sd">        exists this function does not raise any exception.</span>
+
+<span class="sd">        You can find an example of use in the </span>
+<span class="sd">        &lt;a href=&quot;../tutorials/#add-a-counter&quot;&gt;Add a counter&lt;/a&gt; section.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            counter_name: Counter name without schema, e.g. &#39;visits&#39;.</span>
@@ -2234,6 +2256,8 @@ its description and its current value.</p>
 <span class="sd">        in the table `counters.counters`.</span>
 <span class="sd">        If the counter does not exist, this method do not raises any exception.</span>
 
+<span class="sd">        You can find an example of use in the </span>
+<span class="sd">        &lt;a href=&quot;../tutorials/#delete-a-counter&quot;&gt;Delete a counter&lt;/a&gt; section.</span>
 <span class="sd">        Args:</span>
 <span class="sd">            counter_name: Counter name without schema, e.g. &#39;visits&#39;.</span>
 <span class="sd">            print_query: For debug purposes. In true prints the queries and</span>
@@ -2265,6 +2289,8 @@ its description and its current value.</p>
 
 <span class="sd">        Counters are incremented even the transaction is rolled back.</span>
 
+<span class="sd">        You can find an example of use in the </span>
+<span class="sd">        &lt;a href=&quot;../tutorials/#increment-a-counter&quot;&gt;Increment a counter&lt;/a&gt; section.</span>
 <span class="sd">        Args:</span>
 
 <span class="sd">            counter_name: Counter name without schema, e.g. &#39;visits&#39;.</span>
@@ -2290,6 +2316,10 @@ its description and its current value.</p>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns the current counter value.</span>
 
+<span class="sd">        You can find an example of use in the </span>
+<span class="sd">        &lt;a href=&quot;../tutorials/#get-the-current-counter-value&quot;&gt;</span>
+<span class="sd">            Get the current counter value&lt;/a&gt; section.&lt;/a&gt;</span>
+
 <span class="sd">        Args:</span>
 
 <span class="sd">            counter_name: Counter name without schema, e.g. &#39;visits&#39;.</span>
@@ -2314,6 +2344,9 @@ its description and its current value.</p>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns all the counters name, description and current values in a list of</span>
 <span class="sd">        dictionaries.</span>
+
+<span class="sd">        &lt;a href=&quot;../tutorials/#get-all-the-counter-name-description-and-values&quot;&gt;</span>
+<span class="sd">            Get all the counter name, description and values&lt;/a&gt; section.&lt;/a&gt;</span>
 
 <span class="sd">        Args:</span>
 
@@ -2428,9 +2461,11 @@ its description and its current value.</p>
       <p>Adds a counter. Creates the schema <code>counters</code> and the table <code>counters.counters</code>
 if they do not exist. Adds to the table <code>counters.counters</code> a row with
 the counter name and the counter description.</p>
-<p>If the counter already exists, an exception will be raised.</p>
+<p>If the counter already exist, an exception will be raised.</p>
 <p>If the schema <code>counters</code> or the table <code>counters.counters</code> already
 exists this function does not raise any exception.</p>
+<p>You can find an example of use in the 
+<a href="../tutorials/#add-a-counter">Add a counter</a> section.</p>
 
 <p><strong>Parameters:</strong></p>
 <table>
@@ -2485,10 +2520,13 @@ values of the query in the function.</p></td>
 <span class="sd">    if they do not exist. Adds to the table `counters.counters` a row with</span>
 <span class="sd">    the counter name and the counter description.</span>
 
-<span class="sd">    If the counter already exists, an exception will be raised.</span>
+<span class="sd">    If the counter already exist, an exception will be raised.</span>
 
 <span class="sd">    If the schema `counters` or the table `counters.counters` already</span>
 <span class="sd">    exists this function does not raise any exception.</span>
+
+<span class="sd">    You can find an example of use in the </span>
+<span class="sd">    &lt;a href=&quot;../tutorials/#add-a-counter&quot;&gt;Add a counter&lt;/a&gt; section.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        counter_name: Counter name without schema, e.g. &#39;visits&#39;.</span>
@@ -2541,6 +2579,8 @@ values of the query in the function.</p></td>
       <p>Deletes a counter,  or sequence. Also deletes de corresponding row
 in the table <code>counters.counters</code>.
 If the counter does not exist, this method do not raises any exception.</p>
+<p>You can find an example of use in the 
+<a href="../tutorials/#delete-a-counter">Delete a counter</a> section.</p>
 
 <p><strong>Parameters:</strong></p>
 <table>
@@ -2591,6 +2631,8 @@ values of the query in the function.</p></td>
 <span class="sd">    in the table `counters.counters`.</span>
 <span class="sd">    If the counter does not exist, this method do not raises any exception.</span>
 
+<span class="sd">    You can find an example of use in the </span>
+<span class="sd">    &lt;a href=&quot;../tutorials/#delete-a-counter&quot;&gt;Delete a counter&lt;/a&gt; section.</span>
 <span class="sd">    Args:</span>
 <span class="sd">        counter_name: Counter name without schema, e.g. &#39;visits&#39;.</span>
 <span class="sd">        print_query: For debug purposes. In true prints the queries and</span>
@@ -2637,6 +2679,8 @@ values of the query in the function.</p></td>
 
       <p>Returns all the counters name, description and current values in a list of
 dictionaries.</p>
+<p><a href="../tutorials/#get-all-the-counter-name-description-and-values">
+    Get all the counter name, description and values</a> section.</a></p>
 
 <p><strong>Parameters:</strong></p>
 <table>
@@ -2681,6 +2725,9 @@ values of the query in the function.</p></td>
 <span class="sd">    Returns all the counters name, description and current values in a list of</span>
 <span class="sd">    dictionaries.</span>
 
+<span class="sd">    &lt;a href=&quot;../tutorials/#get-all-the-counter-name-description-and-values&quot;&gt;</span>
+<span class="sd">        Get all the counter name, description and values&lt;/a&gt; section.&lt;/a&gt;</span>
+
 <span class="sd">    Args:</span>
 
 <span class="sd">        print_query: For debug purposes. In true prints the queries and</span>
@@ -2716,6 +2763,9 @@ values of the query in the function.</p></td>
     <div class="doc doc-contents ">
 
       <p>Returns the current counter value.</p>
+<p>You can find an example of use in the 
+<a href="../tutorials/#get-the-current-counter-value">
+    Get the current counter value</a> section.</a></p>
 
 <p><strong>Parameters:</strong></p>
 <table>
@@ -2764,6 +2814,10 @@ values of the query in the function.</p></td>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Returns the current counter value.</span>
 
+<span class="sd">    You can find an example of use in the </span>
+<span class="sd">    &lt;a href=&quot;../tutorials/#get-the-current-counter-value&quot;&gt;</span>
+<span class="sd">        Get the current counter value&lt;/a&gt; section.&lt;/a&gt;</span>
+
 <span class="sd">    Args:</span>
 
 <span class="sd">        counter_name: Counter name without schema, e.g. &#39;visits&#39;.</span>
@@ -2806,6 +2860,8 @@ values of the query in the function.</p></td>
 
       <p>Increments the counter value.</p>
 <p>Counters are incremented even the transaction is rolled back.</p>
+<p>You can find an example of use in the 
+<a href="../tutorials/#increment-a-counter">Increment a counter</a> section.</p>
 
 <p><strong>Parameters:</strong></p>
 <table>
@@ -2856,6 +2912,8 @@ values of the query in the function.</p></td>
 
 <span class="sd">    Counters are incremented even the transaction is rolled back.</span>
 
+<span class="sd">    You can find an example of use in the </span>
+<span class="sd">    &lt;a href=&quot;../tutorials/#increment-a-counter&quot;&gt;Increment a counter&lt;/a&gt; section.</span>
 <span class="sd">    Args:</span>
 
 <span class="sd">        counter_name: Counter name without schema, e.g. &#39;visits&#39;.</span>
@@ -2909,14 +2967,14 @@ PgDatabases        </code>
     <div class="doc doc-contents ">
 
       <p>Class to create and delete databases. To use this class it is necessary to have
-an instance of the class PgConnect</p>
+an instance of the class PgConnect.</p>
 
         <details class="quote">
           <summary>Source code in <code>pgOperations/pgOperations.py</code></summary>
           <div class="highlight"><pre><span></span><code><span class="k">class</span> <span class="nc">PgDatabases</span><span class="p">():</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Class to create and delete databases. To use this class it is necessary to have</span>
-<span class="sd">    an instance of the class PgConnect</span>
+<span class="sd">    an instance of the class PgConnect.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">pgConnect</span><span class="p">:</span> <span class="n">PgConnect</span> <span class="o">=</span> <span class="kc">None</span>
 
@@ -3239,27 +3297,29 @@ PgOperations        </code>
     <div class="doc doc-contents ">
 
       <p>Perform the most common operations with PostGIS: insert, delete, update and select. 
-To initialise this class it is necessary a<br />
-<a class="autorefs autorefs-internal" href="#src.pgOperations.pgOperations.PgConnection">PgConnection</a>, 
+To initialise this class it is necessary a 
+<a class="autorefs autorefs-internal" href="#src.pgOperations.pgOperations.PgConnection">PgConnection</a>,
 or a <a class="autorefs autorefs-internal" href="#src.pgOperations.pgOperations.PgConnect">PgConnect</a> instance. </p>
-<p>All the next examples use the variable pgc (a PgConnect instance), the database
-and the table d.points created in the The 
-<a href="../tutorials/#create-a-table" target="_blank">Create table</a> 
-example. The d.points table has the fields <code>gid</code>, <code>description</code>, <code>deph</code> and <code>geom</code>.</p>
+<p>All the next examples use the variable <code>pgc</code>, the database,
+and the table <code>d.points</code>, created in the The 
+<a href="../tutorials/#create-a-table" >Create table</a> 
+section. The <code>d.points</code> table has the fields:
+ <code>gid</code>, <code>description</code>, <code>deph</code> and <code>geom</code>.</p>
 
         <details class="quote">
           <summary>Source code in <code>pgOperations/pgOperations.py</code></summary>
           <div class="highlight"><pre><span></span><code><span class="k">class</span> <span class="nc">PgOperations</span><span class="p">():</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Perform the most common operations with PostGIS: insert, delete, update and select. </span>
-<span class="sd">    To initialise this class it is necessary a  </span>
-<span class="sd">    [PgConnection][src.pgOperations.pgOperations.PgConnection], </span>
+<span class="sd">    To initialise this class it is necessary a </span>
+<span class="sd">    [PgConnection][src.pgOperations.pgOperations.PgConnection],</span>
 <span class="sd">    or a [PgConnect][src.pgOperations.pgOperations.PgConnect] instance. </span>
 
-<span class="sd">    All the next examples use the variable pgc (a PgConnect instance), the database</span>
-<span class="sd">    and the table d.points created in the The </span>
-<span class="sd">    &lt;a href=&quot;../tutorials/#create-a-table&quot; target=&quot;_blank&quot;&gt;Create table&lt;/a&gt; </span>
-<span class="sd">    example. The d.points table has the fields `gid`, `description`, `deph` and `geom`.</span>
+<span class="sd">    All the next examples use the variable `pgc`, the database,</span>
+<span class="sd">    and the table `d.points`, created in the The </span>
+<span class="sd">    &lt;a href=&quot;../tutorials/#create-a-table&quot; &gt;Create table&lt;/a&gt; </span>
+<span class="sd">    section. The `d.points` table has the fields:</span>
+<span class="sd">     `gid`, `description`, `deph` and `geom`.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">query</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span>
@@ -3294,7 +3354,7 @@ example. The d.points table has the fields <code>gid</code>, <code>description</
             <span class="n">str_fields_returning</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">print_query</span><span class="p">:</span> <span class="nb">bool</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">-&gt;</span><span class="nb">list</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Inserts a row in a table.</span>
 
-<span class="sd">        See examples of use in  &lt;a href=&quot;../tutorials/#insert&quot; target=&quot;_blank&quot;&gt;Examples of insert&lt;/a&gt;.</span>
+<span class="sd">        See examples of use in  &lt;a href=&quot;../tutorials/#insert&quot; &gt;Examples of insert&lt;/a&gt;.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            table_name: Table name to insert the row.</span>
@@ -3308,7 +3368,7 @@ example. The d.points table has the fields <code>gid</code>, <code>description</
 <span class="sd">                may be is interesting for debugging.</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">            An empty list `[]` or a list with a dictionary, e.g. `[{&#39;gid&#39;: 25, &#39;date&#39;: &#39;2022-11-13&#39;}]`, depending of the value of the parameter ´str_fields_returning´.</span>
+<span class="sd">            An empty list or a list with a dictionary, depending of the value of the parameter ´str_fields_returning´</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="n">conn</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">pgConnection</span><span class="o">.</span><span class="n">conn</span>
@@ -3352,7 +3412,7 @@ example. The d.points table has the fields <code>gid</code>, <code>description</
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Updates a table</span>
 
-<span class="sd">        See examples of use in  &lt;a href=&quot;../tutorials/#update&quot; target=&quot;_blank&quot;&gt;Examples of update&lt;/a&gt;.</span>
+<span class="sd">        See examples of use in  &lt;a href=&quot;../tutorials/#update&quot; &gt;Examples of update&lt;/a&gt;.</span>
 
 <span class="sd">        Args:</span>
 
@@ -3395,10 +3455,8 @@ example. The d.points table has the fields <code>gid</code>, <code>description</
 
     <span class="k">def</span> <span class="nf">pgDelete</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">table_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">whereClause</span><span class="p">:</span> <span class="n">WhereClause</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">print_query</span><span class="p">:</span> <span class="nb">bool</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Delete rows from a table. Example of use:</span>
-
-<span class="sd">        See an example of use in  </span>
-<span class="sd">        &lt;a href=&quot;../tutorials/#delete&quot; target=&quot;_blank&quot;&gt;Example of delete&lt;/a&gt;.</span>
+<span class="sd">        Delete rows from a table. See an example of use in</span>
+<span class="sd">        &lt;a href=&quot;../tutorials/#delete&quot; &gt;Example of delete&lt;/a&gt;.</span>
 
 <span class="sd">        Args:</span>
 
@@ -3432,7 +3490,7 @@ example. The d.points table has the fields <code>gid</code>, <code>description</
 
     <span class="k">def</span> <span class="nf">pgDeleteWithFiles</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">table_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">field_name_with_file_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
             <span class="n">whereClause</span><span class="p">:</span> <span class="n">WhereClause</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">base_path</span><span class="p">:</span> <span class="nb">str</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> 
-            <span class="n">print_query</span><span class="p">:</span> <span class="nb">bool</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+            <span class="n">print_query</span><span class="p">:</span> <span class="nb">bool</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">-&gt;</span><span class="nb">dict</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        **This method only has been tested in Linux systems**</span>
 
@@ -3444,7 +3502,7 @@ example. The d.points table has the fields <code>gid</code>, <code>description</
 <span class="sd">        Before the rows be deleted, the files are deleted.</span>
 
 <span class="sd">        See an example of use in </span>
-<span class="sd">        &lt;a href=&quot;../tutorials/#delete-rows-and-files&quot; target=&quot;_blank&quot;&gt;Delete rows and files&lt;/a&gt;.</span>
+<span class="sd">        &lt;a href=&quot;../tutorials/#delete-rows-and-files&quot; &gt;Delete rows and files&lt;/a&gt;.</span>
 
 <span class="sd">        Args:</span>
 
@@ -3457,13 +3515,8 @@ example. The d.points table has the fields <code>gid</code>, <code>description</
 <span class="sd">            print_query: for debugging purposes. If true will print the SQL sentences and values.</span>
 
 <span class="sd">        Returns:</span>
+<span class="sd">            Dictionary with the following information. Number of rows deleted, list of file names deleted, list of filenames not deleted, the base path.</span>
 
-<span class="sd">            Dictionary with the following information: </span>
-<span class="sd">                number of rows deleted, list of file names deleted, </span>
-<span class="sd">                list of filenames not deleted, the base path, e.g. </span>
-<span class="sd">                {&#39;numOfRowsDeleted&#39;: 3, &#39;deletedFileNames&#39;: [], </span>
-<span class="sd">                &#39;notDeletedFilenames&#39;: [&#39;image1.jpg&#39;, &#39;image2.jpg&#39;, &#39;image3.jpg&#39;], </span>
-<span class="sd">                &#39;base_path&#39;: &#39;/home/joamona/temp/img&#39;}</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">r</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">pgSelect</span><span class="p">(</span><span class="n">table_name</span><span class="o">=</span><span class="n">table_name</span><span class="p">,</span> 
             <span class="n">string_fields_to_select</span><span class="o">=</span><span class="n">field_name_with_file_name</span><span class="p">,</span> 
@@ -3485,7 +3538,7 @@ example. The d.points table has the fields <code>gid</code>, <code>description</
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        If you have a row stored in a dictionary, this function</span>
 <span class="sd">        deletes a file in the file system. The the filename must be one of the values</span>
-<span class="sd">        of the dictionary. **This method has been texted only in Linux systems**.</span>
+<span class="sd">        of the dictionary. **This method has only been texted in Linux systems**.</span>
 
 <span class="sd">        Examples:</span>
 
@@ -3500,11 +3553,12 @@ example. The d.points table has the fields <code>gid</code>, <code>description</
 <span class="sd">            field_name_with_file_name: field in the table which contains the file name. </span>
 <span class="sd">            base_path: If the `field_name_with_file_name` field contains relative paths,</span>
 <span class="sd">                    or only the file name, you can specify in this parameter the</span>
-<span class="sd">                    base path to complete the absolute path to the file. Does not</span>
-<span class="sd">                    matters if the base_path ends in the character `/` or not, </span>
+<span class="sd">                    base path to complete the absolute path to the file. It does not</span>
+<span class="sd">                    matter if the base_path ends in the character `/` or not, </span>
 <span class="sd">                    e.g. `/home/user/media/images/`, or  `/home/user/media/images`.</span>
 
-<span class="sd">        Returns: </span>
+
+<span class="sd">        Returns:</span>
 <span class="sd">            True if the file could be deleted. Otherwise False.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
@@ -3532,7 +3586,7 @@ example. The d.points table has the fields <code>gid</code>, <code>description</
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Select rows of a table.</span>
 
-<span class="sd">        See examples of use in  &lt;a href=&quot;../tutorials/#select&quot; target=&quot;_blank&quot;&gt;Examples of select&lt;/a&gt;.</span>
+<span class="sd">        See examples of use in  &lt;a href=&quot;../tutorials/#select&quot; &gt;Examples of select&lt;/a&gt;.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            table_name: table name included the schema, e.g. &quot;d.linde&quot;. </span>
@@ -3554,12 +3608,9 @@ example. The d.points table has the fields <code>gid</code>, <code>description</
 <span class="sd">                may be is interesting for debugging.</span>
 
 <span class="sd">        Returns:</span>
-
-<span class="sd">            An empty list, if there is not any row selected.</span>
-<span class="sd">            A list of dictionaries, each dictionary </span>
-<span class="sd">                representing a selected row, if `get_rows_as_dicts` is True. </span>
-<span class="sd">            A list of lists, each list </span>
-<span class="sd">                representing a selected row, if `get_rows_as_dicts` is True.</span>
+<span class="sd">            An empty list, if there is not any row selected.  </span>
+<span class="sd">            A list of dictionaries, each dictionary representing a selected row, if `get_rows_as_dicts` is True.  </span>
+<span class="sd">            A list of lists, each list representing a selected row, if `get_rows_as_dicts` is True.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">cursor</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">pgConnection</span><span class="o">.</span><span class="n">cursor</span>
 
@@ -3633,7 +3684,8 @@ example. The d.points table has the fields <code>gid</code>, <code>description</
 <span class="sd">        &#39;geom&#39;, &#39;st_astext(geom)&#39;, &#39;st_asgeojson(geom)&#39;, &#39;st_transform(st_asgeojson(geom),EPSG),</span>
 <span class="sd">        or &#39;st_transform(st_astext(geom),EPSG). The objetive with this is the output of</span>
 <span class="sd">        this function serves to input for the parameter `list_fields_to_select`</span>
-<span class="sd">        of the method pgSelect.</span>
+<span class="sd">        of the methods &lt;a href=&quot;#src.pgOperations.pgOperations.PgOperations.pgSelect&quot;&gt;pgSelect&lt;/a&gt;, </span>
+<span class="sd">        or &lt;a href=&quot;#src.pgOperations.pgOperations.PgOperations.pgUpdate&quot;&gt;pgUpdate&lt;/a&gt;.</span>
 
 <span class="sd">        Examples:</span>
 <span class="sd">            &gt;&gt;&gt;gf=pg.SelectGeometryFormat()</span>
@@ -3651,9 +3703,9 @@ example. The d.points table has the fields <code>gid</code>, <code>description</
 <span class="sd">            returnAsString: </span>
 <span class="sd">            print_query: </span>
 
-<span class="sd">        Returns: </span>
-<span class="sd">            If `returnAsString` is False, a list of the field names the table, </span>
-<span class="sd">            If `returnAsString` is False, a string with field names of the a table </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            If `returnAsString` is `False`, a list of the field names the table. </span>
+<span class="sd">            If `returnAsString` is `True`, a string with field names of the a table </span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="n">consulta</span><span class="o">=</span><span class="s2">&quot;SELECT column_name FROM information_schema.columns WHERE table_schema=</span><span class="si">%s</span><span class="s2"> and table_name = </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">;</span>
@@ -3730,7 +3782,7 @@ example. The d.points table has the fields <code>gid</code>, <code>description</
 
 <span class="sd">            &gt;&gt;&gt;res=pgo.pgTableExists(table_name_with_schema=&#39;d.points&#39;)</span>
 
-<span class="sd">        Returns: </span>
+<span class="sd">        Returns:</span>
 <span class="sd">            True or False, depending on if the table exists in the database or not.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
@@ -3748,9 +3800,9 @@ example. The d.points table has the fields <code>gid</code>, <code>description</
     <span class="k">def</span> <span class="nf">pgCreateTable</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">table_name_with_schema</span><span class="p">:</span><span class="nb">str</span><span class="p">,</span> <span class="n">fields_definition</span><span class="p">:</span><span class="nb">str</span><span class="p">,</span> 
         <span class="n">delete_table_if_exists</span><span class="p">:</span> <span class="nb">bool</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">print_query</span><span class="p">:</span> <span class="nb">bool</span><span class="o">=</span> <span class="kc">False</span><span class="p">)</span><span class="o">-&gt;</span><span class="nb">bool</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Creates a table. If the table already exists this method can delete it.</span>
-<span class="sd">        Returns True if the table has been created, or false if the table</span>
-<span class="sd">        already existed.</span>
+<span class="sd">        Creates a table. If the table already exists this method can delete it before.</span>
+<span class="sd">        Returns `True` if the table has been created, or `False` if the table</span>
+<span class="sd">        already existed, and the parameter `delete_table_if_exists` was set to `False`.</span>
 
 <span class="sd">        See an example of use in </span>
 <span class="sd">        &lt;a href=&quot;../tutorials/#delete-rows-and-files&quot;&gt;Delete rows and files&lt;/a&gt;.</span>
@@ -3764,10 +3816,12 @@ example. The d.points table has the fields <code>gid</code>, <code>description</
 <span class="sd">        Args:</span>
 
 <span class="sd">            table_name_with_schema: The table name, including the schema, e.g. &#39;public.customers&#39;.</span>
-<span class="sd">            fields_definition: String with the fields definitions. If any field name stars</span>
-<span class="sd">                with a number, or has a space, must be quoted, e.g. </span>
-<span class="sd">                &#39;gid serial primary key, natcode varchar,nameunit varchar,&quot;{fieldName}&quot; varchar&#39;.format(</span>
-<span class="sd">                    fieldName=&#39;25_utm&#39;) </span>
+<span class="sd">            fields_definition: String with the fields definitions. If any field name starts</span>
+<span class="sd">                with a number, or has a space, must be double quoted, e.g. </span>
+
+<span class="sd">                    &gt;&gt;&gt;fields = &#39;gid serial primary key, natcode varchar,</span>
+<span class="sd">                        nameunit varchar,&quot;{fieldName}&quot; varchar&#39;.format(</span>
+<span class="sd">                        fieldName=&#39;25_utm&#39;) </span>
 <span class="sd">            delete_table_if_exists: If True will delete the table before create it. If False,</span>
 <span class="sd">                if the table exists Psycopg2 will raise an error.</span>
 <span class="sd">            print_query: For debugging purposes. If true the delete and create table</span>
@@ -3812,8 +3866,8 @@ example. The d.points table has the fields <code>gid</code>, <code>description</
 <span class="sd">            print_query: For debugging purposes. If True will print </span>
 <span class="sd">                the query and values in the function.</span>
 
-<span class="sd">        Returns: </span>
-<span class="sd">            True or False</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            True or False, depending on if the value exists.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="n">cons</span><span class="o">=</span><span class="s2">&quot;SELECT exists (SELECT </span><span class="si">{0}</span><span class="s2"> FROM </span><span class="si">{1}</span><span class="s2"> WHERE </span><span class="si">{2}</span><span class="s2"> = </span><span class="si">%s</span><span class="s2"> LIMIT 1)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">field_name</span><span class="p">,</span> <span class="n">table_name_with_schema</span><span class="p">,</span> <span class="n">field_name</span><span class="p">)</span>
@@ -3950,9 +4004,9 @@ is True, the SQL queries and data will be printed. </p></td>
 
     <div class="doc doc-contents ">
 
-      <p>Creates a table. If the table already exists this method can delete it.
-Returns True if the table has been created, or false if the table
-already existed.</p>
+      <p>Creates a table. If the table already exists this method can delete it before.
+Returns <code>True</code> if the table has been created, or <code>False</code> if the table
+already existed, and the parameter <code>delete_table_if_exists</code> was set to <code>False</code>.</p>
 <p>See an example of use in 
 <a href="../tutorials/#delete-rows-and-files">Delete rows and files</a>.</p>
 
@@ -3982,10 +4036,12 @@ already existed.</p>
       <tr>
         <td><code>fields_definition</code></td>
         <td><code>str</code></td>
-        <td><p>String with the fields definitions. If any field name stars
-with a number, or has a space, must be quoted, e.g. 
-'gid serial primary key, natcode varchar,nameunit varchar,"{fieldName}" varchar'.format(
-    fieldName='25_utm') </p></td>
+        <td><p>String with the fields definitions. If any field name starts
+with a number, or has a space, must be double quoted, e.g. </p>
+<pre><code>&gt;&gt;&gt;fields = 'gid serial primary key, natcode varchar,
+    nameunit varchar,"{fieldName}" varchar'.format(
+    fieldName='25_utm')
+</code></pre></td>
         <td><em>required</em></td>
       </tr>
       <tr>
@@ -4026,9 +4082,9 @@ sentences will be printed.</p></td>
           <div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">pgCreateTable</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">table_name_with_schema</span><span class="p">:</span><span class="nb">str</span><span class="p">,</span> <span class="n">fields_definition</span><span class="p">:</span><span class="nb">str</span><span class="p">,</span> 
     <span class="n">delete_table_if_exists</span><span class="p">:</span> <span class="nb">bool</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">print_query</span><span class="p">:</span> <span class="nb">bool</span><span class="o">=</span> <span class="kc">False</span><span class="p">)</span><span class="o">-&gt;</span><span class="nb">bool</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Creates a table. If the table already exists this method can delete it.</span>
-<span class="sd">    Returns True if the table has been created, or false if the table</span>
-<span class="sd">    already existed.</span>
+<span class="sd">    Creates a table. If the table already exists this method can delete it before.</span>
+<span class="sd">    Returns `True` if the table has been created, or `False` if the table</span>
+<span class="sd">    already existed, and the parameter `delete_table_if_exists` was set to `False`.</span>
 
 <span class="sd">    See an example of use in </span>
 <span class="sd">    &lt;a href=&quot;../tutorials/#delete-rows-and-files&quot;&gt;Delete rows and files&lt;/a&gt;.</span>
@@ -4042,10 +4098,12 @@ sentences will be printed.</p></td>
 <span class="sd">    Args:</span>
 
 <span class="sd">        table_name_with_schema: The table name, including the schema, e.g. &#39;public.customers&#39;.</span>
-<span class="sd">        fields_definition: String with the fields definitions. If any field name stars</span>
-<span class="sd">            with a number, or has a space, must be quoted, e.g. </span>
-<span class="sd">            &#39;gid serial primary key, natcode varchar,nameunit varchar,&quot;{fieldName}&quot; varchar&#39;.format(</span>
-<span class="sd">                fieldName=&#39;25_utm&#39;) </span>
+<span class="sd">        fields_definition: String with the fields definitions. If any field name starts</span>
+<span class="sd">            with a number, or has a space, must be double quoted, e.g. </span>
+
+<span class="sd">                &gt;&gt;&gt;fields = &#39;gid serial primary key, natcode varchar,</span>
+<span class="sd">                    nameunit varchar,&quot;{fieldName}&quot; varchar&#39;.format(</span>
+<span class="sd">                    fieldName=&#39;25_utm&#39;) </span>
 <span class="sd">        delete_table_if_exists: If True will delete the table before create it. If False,</span>
 <span class="sd">            if the table exists Psycopg2 will raise an error.</span>
 <span class="sd">        print_query: For debugging purposes. If true the delete and create table</span>
@@ -4098,9 +4156,8 @@ sentences will be printed.</p></td>
 
     <div class="doc doc-contents ">
 
-      <p>Delete rows from a table. Example of use:</p>
-<p>See an example of use in<br />
-<a href="../tutorials/#delete" target="_blank">Example of delete</a>.</p>
+      <p>Delete rows from a table. See an example of use in
+<a href="../tutorials/#delete" >Example of delete</a>.</p>
 
 <p><strong>Parameters:</strong></p>
 <table>
@@ -4154,10 +4211,8 @@ will be deleted.</p></td>
           <summary>Source code in <code>pgOperations/pgOperations.py</code></summary>
           <div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">pgDelete</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">table_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">whereClause</span><span class="p">:</span> <span class="n">WhereClause</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">print_query</span><span class="p">:</span> <span class="nb">bool</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Delete rows from a table. Example of use:</span>
-
-<span class="sd">    See an example of use in  </span>
-<span class="sd">    &lt;a href=&quot;../tutorials/#delete&quot; target=&quot;_blank&quot;&gt;Example of delete&lt;/a&gt;.</span>
+<span class="sd">    Delete rows from a table. See an example of use in</span>
+<span class="sd">    &lt;a href=&quot;../tutorials/#delete&quot; &gt;Example of delete&lt;/a&gt;.</span>
 
 <span class="sd">    Args:</span>
 
@@ -4211,7 +4266,7 @@ will be deleted.</p></td>
 
       <p>If you have a row stored in a dictionary, this function
 deletes a file in the file system. The the filename must be one of the values
-of the dictionary. <strong>This method has been texted only in Linux systems</strong>.</p>
+of the dictionary. <strong>This method has only been texted in Linux systems</strong>.</p>
 
 <p><strong>Examples:</strong></p>
     <div class="highlight"><pre><span></span><code><span class="o">&gt;&gt;&gt;</span><span class="n">d</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;gid&#39;</span><span class="p">:</span> <span class="mi">25</span><span class="p">,</span> <span class="s1">&#39;description&#39;</span><span class="p">:</span> <span class="s1">&#39;customer&#39;</span><span class="p">,</span> <span class="s1">&#39;img&#39;</span><span class="p">:</span> <span class="s1">&#39;00012325.jpg&#39;</span><span class="p">}</span>
@@ -4248,22 +4303,35 @@ e.g. {'gid': 25, 'description': 'customer', 'img': '00012325.jpg'}</p></td>
         <td><code>str</code></td>
         <td><p>If the <code>field_name_with_file_name</code> field contains relative paths,
     or only the file name, you can specify in this parameter the
-    base path to complete the absolute path to the file. Does not
-    matters if the base_path ends in the character <code>/</code> or not, 
+    base path to complete the absolute path to the file. It does not
+    matter if the base_path ends in the character <code>/</code> or not, 
     e.g. <code>/home/user/media/images/</code>, or  <code>/home/user/media/images</code>.</p></td>
         <td><code>None</code></td>
       </tr>
   </tbody>
-</table>      <p>Returns: 
-    True if the file could be deleted. Otherwise False.</p>
-
+</table>
+<p><strong>Returns:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>bool</code></td>
+      <td><p>True if the file could be deleted. Otherwise False.</p></td>
+    </tr>
+  </tbody>
+</table>
         <details class="quote">
           <summary>Source code in <code>pgOperations/pgOperations.py</code></summary>
           <div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">pgDeleteFileInRow</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">row</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">field_name_with_file_name</span><span class="p">:</span><span class="nb">str</span><span class="p">,</span> <span class="n">base_path</span><span class="p">:</span> <span class="nb">str</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    If you have a row stored in a dictionary, this function</span>
 <span class="sd">    deletes a file in the file system. The the filename must be one of the values</span>
-<span class="sd">    of the dictionary. **This method has been texted only in Linux systems**.</span>
+<span class="sd">    of the dictionary. **This method has only been texted in Linux systems**.</span>
 
 <span class="sd">    Examples:</span>
 
@@ -4278,11 +4346,12 @@ e.g. {'gid': 25, 'description': 'customer', 'img': '00012325.jpg'}</p></td>
 <span class="sd">        field_name_with_file_name: field in the table which contains the file name. </span>
 <span class="sd">        base_path: If the `field_name_with_file_name` field contains relative paths,</span>
 <span class="sd">                or only the file name, you can specify in this parameter the</span>
-<span class="sd">                base path to complete the absolute path to the file. Does not</span>
-<span class="sd">                matters if the base_path ends in the character `/` or not, </span>
+<span class="sd">                base path to complete the absolute path to the file. It does not</span>
+<span class="sd">                matter if the base_path ends in the character `/` or not, </span>
 <span class="sd">                e.g. `/home/user/media/images/`, or  `/home/user/media/images`.</span>
 
-<span class="sd">    Returns: </span>
+
+<span class="sd">    Returns:</span>
 <span class="sd">        True if the file could be deleted. Otherwise False.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -4328,7 +4397,7 @@ can contain an absolute path, or a relative path. It is possible to complete
 relative paths with the parameter <code>base_path</code>.</p>
 <p>Before the rows be deleted, the files are deleted.</p>
 <p>See an example of use in 
-<a href="../tutorials/#delete-rows-and-files" target="_blank">Delete rows and files</a>.</p>
+<a href="../tutorials/#delete-rows-and-files" >Delete rows and files</a>.</p>
 
 <p><strong>Parameters:</strong></p>
 <table>
@@ -4385,12 +4454,8 @@ relative paths with the parameter <code>base_path</code>.</p>
   </thead>
   <tbody>
     <tr>
-      <td><code>Dictionary with the following information</code></td>
-      <td><p>number of rows deleted, list of file names deleted, 
-    list of filenames not deleted, the base path, e.g. 
-    {'numOfRowsDeleted': 3, 'deletedFileNames': [], 
-    'notDeletedFilenames': ['image1.jpg', 'image2.jpg', 'image3.jpg'], 
-    'base_path': '/home/joamona/temp/img'}</p></td>
+      <td><code>dict</code></td>
+      <td><p>Dictionary with the following information. Number of rows deleted, list of file names deleted, list of filenames not deleted, the base path.</p></td>
     </tr>
   </tbody>
 </table>
@@ -4398,7 +4463,7 @@ relative paths with the parameter <code>base_path</code>.</p>
           <summary>Source code in <code>pgOperations/pgOperations.py</code></summary>
           <div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">pgDeleteWithFiles</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">table_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">field_name_with_file_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
         <span class="n">whereClause</span><span class="p">:</span> <span class="n">WhereClause</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">base_path</span><span class="p">:</span> <span class="nb">str</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> 
-        <span class="n">print_query</span><span class="p">:</span> <span class="nb">bool</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+        <span class="n">print_query</span><span class="p">:</span> <span class="nb">bool</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">-&gt;</span><span class="nb">dict</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    **This method only has been tested in Linux systems**</span>
 
@@ -4410,7 +4475,7 @@ relative paths with the parameter <code>base_path</code>.</p>
 <span class="sd">    Before the rows be deleted, the files are deleted.</span>
 
 <span class="sd">    See an example of use in </span>
-<span class="sd">    &lt;a href=&quot;../tutorials/#delete-rows-and-files&quot; target=&quot;_blank&quot;&gt;Delete rows and files&lt;/a&gt;.</span>
+<span class="sd">    &lt;a href=&quot;../tutorials/#delete-rows-and-files&quot; &gt;Delete rows and files&lt;/a&gt;.</span>
 
 <span class="sd">    Args:</span>
 
@@ -4423,13 +4488,8 @@ relative paths with the parameter <code>base_path</code>.</p>
 <span class="sd">        print_query: for debugging purposes. If true will print the SQL sentences and values.</span>
 
 <span class="sd">    Returns:</span>
+<span class="sd">        Dictionary with the following information. Number of rows deleted, list of file names deleted, list of filenames not deleted, the base path.</span>
 
-<span class="sd">        Dictionary with the following information: </span>
-<span class="sd">            number of rows deleted, list of file names deleted, </span>
-<span class="sd">            list of filenames not deleted, the base path, e.g. </span>
-<span class="sd">            {&#39;numOfRowsDeleted&#39;: 3, &#39;deletedFileNames&#39;: [], </span>
-<span class="sd">            &#39;notDeletedFilenames&#39;: [&#39;image1.jpg&#39;, &#39;image2.jpg&#39;, &#39;image3.jpg&#39;], </span>
-<span class="sd">            &#39;base_path&#39;: &#39;/home/joamona/temp/img&#39;}</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">r</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">pgSelect</span><span class="p">(</span><span class="n">table_name</span><span class="o">=</span><span class="n">table_name</span><span class="p">,</span> 
         <span class="n">string_fields_to_select</span><span class="o">=</span><span class="n">field_name_with_file_name</span><span class="p">,</span> 
@@ -4472,7 +4532,8 @@ The geometry field name can be returned with one of the following formats:
 'geom', 'st_astext(geom)', 'st_asgeojson(geom)', 'st_transform(st_asgeojson(geom),EPSG),
 or 'st_transform(st_astext(geom),EPSG). The objetive with this is the output of
 this function serves to input for the parameter <code>list_fields_to_select</code>
-of the method pgSelect.</p>
+of the methods <a href="#src.pgOperations.pgOperations.PgOperations.pgSelect">pgSelect</a>, 
+or <a href="#src.pgOperations.pgOperations.PgOperations.pgUpdate">pgUpdate</a>.</p>
 
 <p><strong>Examples:</strong></p>
     <div class="highlight"><pre><span></span><code><span class="o">&gt;&gt;&gt;</span><span class="n">gf</span><span class="o">=</span><span class="n">pg</span><span class="o">.</span><span class="n">SelectGeometryFormat</span><span class="p">()</span>
@@ -4526,10 +4587,23 @@ of the method pgSelect.</p>
         <td><code>False</code></td>
       </tr>
   </tbody>
-</table>      <p>Returns: 
-    If <code>returnAsString</code> is False, a list of the field names the table, 
-    If <code>returnAsString</code> is False, a string with field names of the a table </p>
-
+</table>
+<p><strong>Returns:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>Union[list, str]</code></td>
+      <td><p>If <code>returnAsString</code> is <code>False</code>, a list of the field names the table. 
+If <code>returnAsString</code> is <code>True</code>, a string with field names of the a table </p></td>
+    </tr>
+  </tbody>
+</table>
         <details class="quote">
           <summary>Source code in <code>pgOperations/pgOperations.py</code></summary>
           <div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">pgGetTableFieldNames</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">table_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> 
@@ -4543,7 +4617,8 @@ of the method pgSelect.</p>
 <span class="sd">    &#39;geom&#39;, &#39;st_astext(geom)&#39;, &#39;st_asgeojson(geom)&#39;, &#39;st_transform(st_asgeojson(geom),EPSG),</span>
 <span class="sd">    or &#39;st_transform(st_astext(geom),EPSG). The objetive with this is the output of</span>
 <span class="sd">    this function serves to input for the parameter `list_fields_to_select`</span>
-<span class="sd">    of the method pgSelect.</span>
+<span class="sd">    of the methods &lt;a href=&quot;#src.pgOperations.pgOperations.PgOperations.pgSelect&quot;&gt;pgSelect&lt;/a&gt;, </span>
+<span class="sd">    or &lt;a href=&quot;#src.pgOperations.pgOperations.PgOperations.pgUpdate&quot;&gt;pgUpdate&lt;/a&gt;.</span>
 
 <span class="sd">    Examples:</span>
 <span class="sd">        &gt;&gt;&gt;gf=pg.SelectGeometryFormat()</span>
@@ -4561,9 +4636,9 @@ of the method pgSelect.</p>
 <span class="sd">        returnAsString: </span>
 <span class="sd">        print_query: </span>
 
-<span class="sd">    Returns: </span>
-<span class="sd">        If `returnAsString` is False, a list of the field names the table, </span>
-<span class="sd">        If `returnAsString` is False, a string with field names of the a table </span>
+<span class="sd">    Returns:</span>
+<span class="sd">        If `returnAsString` is `False`, a list of the field names the table. </span>
+<span class="sd">        If `returnAsString` is `True`, a string with field names of the a table </span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">consulta</span><span class="o">=</span><span class="s2">&quot;SELECT column_name FROM information_schema.columns WHERE table_schema=</span><span class="si">%s</span><span class="s2"> and table_name = </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">;</span>
@@ -4646,7 +4721,7 @@ of the method pgSelect.</p>
     <div class="doc doc-contents ">
 
       <p>Inserts a row in a table.</p>
-<p>See examples of use in  <a href="../tutorials/#insert" target="_blank">Examples of insert</a>.</p>
+<p>See examples of use in  <a href="../tutorials/#insert" >Examples of insert</a>.</p>
 
 <p><strong>Parameters:</strong></p>
 <table>
@@ -4700,8 +4775,8 @@ may be is interesting for debugging.</p></td>
   </thead>
   <tbody>
     <tr>
-      <td><code>An empty list `[]` or a list with a dictionary, e.g. `[{&#39;gid&#39;</code></td>
-      <td><p>25, 'date': '2022-11-13'}]`, depending of the value of the parameter ´str_fields_returning´.</p></td>
+      <td><code>list</code></td>
+      <td><p>An empty list or a list with a dictionary, depending of the value of the parameter ´str_fields_returning´</p></td>
     </tr>
   </tbody>
 </table>
@@ -4712,7 +4787,7 @@ may be is interesting for debugging.</p></td>
         <span class="n">str_fields_returning</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">print_query</span><span class="p">:</span> <span class="nb">bool</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">-&gt;</span><span class="nb">list</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Inserts a row in a table.</span>
 
-<span class="sd">    See examples of use in  &lt;a href=&quot;../tutorials/#insert&quot; target=&quot;_blank&quot;&gt;Examples of insert&lt;/a&gt;.</span>
+<span class="sd">    See examples of use in  &lt;a href=&quot;../tutorials/#insert&quot; &gt;Examples of insert&lt;/a&gt;.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        table_name: Table name to insert the row.</span>
@@ -4726,7 +4801,7 @@ may be is interesting for debugging.</p></td>
 <span class="sd">            may be is interesting for debugging.</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        An empty list `[]` or a list with a dictionary, e.g. `[{&#39;gid&#39;: 25, &#39;date&#39;: &#39;2022-11-13&#39;}]`, depending of the value of the parameter ´str_fields_returning´.</span>
+<span class="sd">        An empty list or a list with a dictionary, depending of the value of the parameter ´str_fields_returning´</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">conn</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">pgConnection</span><span class="o">.</span><span class="n">conn</span>
@@ -4784,7 +4859,7 @@ may be is interesting for debugging.</p></td>
     <div class="doc doc-contents ">
 
       <p>Select rows of a table.</p>
-<p>See examples of use in  <a href="../tutorials/#select" target="_blank">Examples of select</a>.</p>
+<p>See examples of use in  <a href="../tutorials/#select" >Examples of select</a>.</p>
 
 <p><strong>Parameters:</strong></p>
 <table>
@@ -4867,11 +4942,9 @@ may be is interesting for debugging.</p></td>
   <tbody>
     <tr>
       <td><code>list</code></td>
-      <td><p>An empty list, if there is not any row selected.
-A list of dictionaries, each dictionary 
-    representing a selected row, if <code>get_rows_as_dicts</code> is True. 
-A list of lists, each list 
-    representing a selected row, if <code>get_rows_as_dicts</code> is True.</p></td>
+      <td><p>An empty list, if there is not any row selected.<br />
+A list of dictionaries, each dictionary representing a selected row, if <code>get_rows_as_dicts</code> is True.<br />
+A list of lists, each list representing a selected row, if <code>get_rows_as_dicts</code> is True.</p></td>
     </tr>
   </tbody>
 </table>
@@ -4885,7 +4958,7 @@ A list of lists, each list
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Select rows of a table.</span>
 
-<span class="sd">    See examples of use in  &lt;a href=&quot;../tutorials/#select&quot; target=&quot;_blank&quot;&gt;Examples of select&lt;/a&gt;.</span>
+<span class="sd">    See examples of use in  &lt;a href=&quot;../tutorials/#select&quot; &gt;Examples of select&lt;/a&gt;.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        table_name: table name included the schema, e.g. &quot;d.linde&quot;. </span>
@@ -4907,12 +4980,9 @@ A list of lists, each list
 <span class="sd">            may be is interesting for debugging.</span>
 
 <span class="sd">    Returns:</span>
-
-<span class="sd">        An empty list, if there is not any row selected.</span>
-<span class="sd">        A list of dictionaries, each dictionary </span>
-<span class="sd">            representing a selected row, if `get_rows_as_dicts` is True. </span>
-<span class="sd">        A list of lists, each list </span>
-<span class="sd">            representing a selected row, if `get_rows_as_dicts` is True.</span>
+<span class="sd">        An empty list, if there is not any row selected.  </span>
+<span class="sd">        A list of dictionaries, each dictionary representing a selected row, if `get_rows_as_dicts` is True.  </span>
+<span class="sd">        A list of lists, each list representing a selected row, if `get_rows_as_dicts` is True.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">cursor</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">pgConnection</span><span class="o">.</span><span class="n">cursor</span>
 
@@ -5025,9 +5095,22 @@ table_name_with_schema: table name included the schema, e.g. "d.boundary".</p>
 <p><strong>Examples:</strong></p>
     <div class="highlight"><pre><span></span><code><span class="o">&gt;&gt;&gt;</span><span class="n">res</span><span class="o">=</span><span class="n">pgo</span><span class="o">.</span><span class="n">pgTableExists</span><span class="p">(</span><span class="n">table_name_with_schema</span><span class="o">=</span><span class="s1">&#39;d.points&#39;</span><span class="p">)</span>
 </code></pre></div>
-      <p>Returns: 
-    True or False, depending on if the table exists in the database or not.</p>
 
+<p><strong>Returns:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>bool</code></td>
+      <td><p>True or False, depending on if the table exists in the database or not.</p></td>
+    </tr>
+  </tbody>
+</table>
         <details class="quote">
           <summary>Source code in <code>pgOperations/pgOperations.py</code></summary>
           <div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">pgTableExists</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">table_name_with_schema</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">print_query</span><span class="p">:</span> <span class="nb">bool</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">-&gt;</span><span class="nb">bool</span><span class="p">:</span>
@@ -5044,7 +5127,7 @@ table_name_with_schema: table name included the schema, e.g. "d.boundary".</p>
 
 <span class="sd">        &gt;&gt;&gt;res=pgo.pgTableExists(table_name_with_schema=&#39;d.points&#39;)</span>
 
-<span class="sd">    Returns: </span>
+<span class="sd">    Returns:</span>
 <span class="sd">        True or False, depending on if the table exists in the database or not.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -5079,7 +5162,7 @@ table_name_with_schema: table name included the schema, e.g. "d.boundary".</p>
     <div class="doc doc-contents ">
 
       <p>Updates a table</p>
-<p>See examples of use in  <a href="../tutorials/#update" target="_blank">Examples of update</a>.</p>
+<p>See examples of use in  <a href="../tutorials/#update" >Examples of update</a>.</p>
 
 <p><strong>Parameters:</strong></p>
 <table>
@@ -5145,7 +5228,7 @@ may be is interesting for debugging.</p></td>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Updates a table</span>
 
-<span class="sd">    See examples of use in  &lt;a href=&quot;../tutorials/#update&quot; target=&quot;_blank&quot;&gt;Examples of update&lt;/a&gt;.</span>
+<span class="sd">    See examples of use in  &lt;a href=&quot;../tutorials/#update&quot; &gt;Examples of update&lt;/a&gt;.</span>
 
 <span class="sd">    Args:</span>
 
@@ -5244,9 +5327,22 @@ the query and values in the function.</p></td>
         <td><code>False</code></td>
       </tr>
   </tbody>
-</table>      <p>Returns: 
-    True or False</p>
-
+</table>
+<p><strong>Returns:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>bool</code></td>
+      <td><p>True or False, depending on if the value exists.</p></td>
+    </tr>
+  </tbody>
+</table>
         <details class="quote">
           <summary>Source code in <code>pgOperations/pgOperations.py</code></summary>
           <div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">pgValueExists</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">table_name_with_schema</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">field_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">field_value</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">print_query</span><span class="p">:</span> <span class="nb">bool</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">-&gt;</span><span class="nb">bool</span><span class="p">:</span>
@@ -5260,8 +5356,8 @@ the query and values in the function.</p></td>
 <span class="sd">        print_query: For debugging purposes. If True will print </span>
 <span class="sd">            the query and values in the function.</span>
 
-<span class="sd">    Returns: </span>
-<span class="sd">        True or False</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        True or False, depending on if the value exists.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">cons</span><span class="o">=</span><span class="s2">&quot;SELECT exists (SELECT </span><span class="si">{0}</span><span class="s2"> FROM </span><span class="si">{1}</span><span class="s2"> WHERE </span><span class="si">{2}</span><span class="s2"> = </span><span class="si">%s</span><span class="s2"> LIMIT 1)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">field_name</span><span class="p">,</span> <span class="n">table_name_with_schema</span><span class="p">,</span> <span class="n">field_name</span><span class="p">)</span>

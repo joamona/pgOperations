@@ -232,6 +232,13 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#summary" class="md-nav__link">
+    Summary
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#create-a-database" class="md-nav__link">
     Create a database
   </a>
@@ -342,6 +349,13 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#create-table" class="md-nav__link">
+    Create table
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#delete-rows-and-files" class="md-nav__link">
     Delete rows and files
   </a>
@@ -373,6 +387,47 @@
   <a href="#manage-counters" class="md-nav__link">
     Manage counters
   </a>
+  
+    <nav class="md-nav" aria-label="Manage counters">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#add-a-counter" class="md-nav__link">
+    Add a counter
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#increment-a-counter" class="md-nav__link">
+    Increment a counter
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#get-the-current-counter-value" class="md-nav__link">
+    Get the current counter value
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#get-all-the-counter-name-description-and-values" class="md-nav__link">
+    Get all the counter name, description and values
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#delete-a-counter" class="md-nav__link">
+    Delete a counter
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
         
@@ -453,6 +508,13 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#summary" class="md-nav__link">
+    Summary
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#create-a-database" class="md-nav__link">
     Create a database
   </a>
@@ -563,6 +625,13 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#create-table" class="md-nav__link">
+    Create table
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#delete-rows-and-files" class="md-nav__link">
     Delete rows and files
   </a>
@@ -594,6 +663,47 @@
   <a href="#manage-counters" class="md-nav__link">
     Manage counters
   </a>
+  
+    <nav class="md-nav" aria-label="Manage counters">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#add-a-counter" class="md-nav__link">
+    Add a counter
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#increment-a-counter" class="md-nav__link">
+    Increment a counter
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#get-the-current-counter-value" class="md-nav__link">
+    Get the current counter value
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#get-all-the-counter-name-description-and-values" class="md-nav__link">
+    Get all the counter name, description and values
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#delete-a-counter" class="md-nav__link">
+    Delete a counter
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
         
@@ -636,30 +746,30 @@
 (pgOperations)$pip install pgOperations
 </code></pre>
 <p>Now you are ready to use the library to edit data in PostgreSQL.</p>
-<p>There are mainly three classes whose methods are useful: <a href="../reference/#src.pgOperations.pgOperations.PgOperations" target="_blank">PgOperations</a>, to edit data, <a href="../reference/#src.pgOperations.pgOperations.PgCounters" target="_blank">PgCounters</a>, to manage counters and <a href="../reference/#src.pgOperations.pgOperations.PgDatabases" target="_blank">PgDatabases</a>, to manage databases. The rest of the classes are auxiliary classes
+<h2 id="summary">Summary</h2>
+<p>There are mainly three classes whose methods are useful: <a href="../reference/#src.pgOperations.pgOperations.PgOperations">PgOperations</a>, to edit data, <a href="../reference/#src.pgOperations.pgOperations.PgCounters">PgCounters</a>, to manage counters and <a href="../reference/#src.pgOperations.pgOperations.PgDatabases">PgDatabases</a>, to manage databases. The rest of the classes are auxiliary classes
 to arrange the parameters that the useful classes need.</p>
-<p>In the bellow section you have an example of use of all the utilities.</p>
 <h2 id="create-a-database">Create a database</h2>
 <p>To create a database it is necessary first to have an opened connection. Create a regular psycopg2 connection to the 'postgres' database:</p>
 <pre><code>conn=psycopg2.connect(database="postgres", user="postgres", 
             password="postgres", host="localhost", port=5432)
 </code></pre>
-<p>Create a <a href="../reference/#src.pgOperations.pgOperations.PgConnection" target="_blank">PgConnection</a> instance:</p>
+<p>Create a <a href="../reference/#src.pgOperations.pgOperations.PgConnection">PgConnection</a> instance:</p>
 <pre><code>pgc = pg.PgConnection(conn)
 </code></pre>
-<p>Create a <a href="../reference/#src.pgOperations.pgOperations.PgDatabases" target="_blank">PgDatabases</a> instance. This class allow to create and delete databases:</p>
+<p>Create a <a href="../reference/#src.pgOperations.pgOperations.PgDatabases">PgDatabases</a> instance. This class allow to create and delete databases:</p>
 <pre><code>pgdb=pg.PgDatabases(pgConnect=pgc)
 </code></pre>
 <p>Create the database:</p>
 <pre><code>pgc2=pgdb.createDatabase(databaseName="pgoperationstest",
             addPostgisExtension=True,closeNewConnection=False)
 </code></pre>
-<p>The <a href="../reference/#src.pgOperations.pgOperations.PgDatabases.createDatabase" target="_blank">createDatabase</a> 
-method returns an opened PgConnect instance, connected to the new database. </p>
+<p>The <a href="../reference/#src.pgOperations.pgOperations.PgDatabases.createDatabase">createDatabase</a> 
+method returns an opened <a href="../reference/#src.pgOperations.pgOperations.PgConnect">PgConnect</a> instance, connected to the new database, and ready to use with the main class of thlis library 
+<a href="../reference/#src.pgOperations.pgOperations.PgOperations">PgOperations</a>. </p>
 <h2 id="create-an-example-table">Create an example table</h2>
 <p>Execute regular SQL code to create an scheme and a table in the <code>pgoperationstest</code> database, continuing with the previous listing. There is also an utility for creating tables. See 
-<a href="../reference/#src.pgOperations.pgOperations.PgOperations.pgCreateTable" 
-target="_blank"> PgOperations.pgCreateTable</a>.</p>
+<a href="../reference/#src.pgOperations.pgOperations.PgOperations.pgCreateTable"> PgOperations.pgCreateTable</a>.</p>
 <pre><code>pgc2.cursor.execute("create schema d")
 pgc2.cursor.execute("create table d.points (gid serial primary key, 
             description varchar, depth double precision, 
@@ -677,19 +787,24 @@ pgc.disconnect()
 </blockquote>
 <p>Also, in the next examples it is supposed the <code>pgOperations</code> module has been imported, 
 stored in the <code>pg</code> variable, and there is
-a <a href="../reference/#src.pgOperations.pgOperations.PgOperations" target="_blank">PgOperations</a>  instance stored in the variable called ´pgo´:</p>
+a <a href="../reference/#src.pgOperations.pgOperations.PgOperations">PgOperations</a>  instance stored in the variable called ´pgo´:</p>
 <pre><code>from pgOperations import pgOperations as pg
 oCon=pg.PgConnect(database="pgoperationstest", user="postgres", 
         password="postgres", host="localhost", port="5432")
 pgo=pg.PgOperations(pgConnection=oCon,global_print_queries=True))
 </code></pre>
-<p><strong>This library supposes all python dictionary keys match with the table field names</strong>.</p>
+<p>The parameter <code>global_print_queries=True</code> indicates that all the methods of the <code>pgo</code> object, 
+created in the previous listing, must print a detailed information: query, parameters, 
+values, and result. This mode is to know what is happening, for debugging purposes.</p>
+<blockquote>
+<p><strong><em>NOTE:</em></strong>  <strong>This library supposes all python dictionary keys match with the table field names</strong>.</p>
+</blockquote>
 <h3 id="insert">Insert</h3>
-<p>To insert you can use the method <a href="../reference/#src.pgOperations.pgOperations.PgOperations.pgInsert" target="_blank">PgOperations.pgInsert</a>. In the next sections you will
+<p>To insert you can use the method <a href="../reference/#src.pgOperations.pgOperations.PgOperations.pgInsert">PgOperations.pgInsert</a>. In the next sections you will
  see different use cases.</p>
 <h4 id="example-without-postgis-geometry-field">Example without PostGIS geometry field</h4>
 <p>Example with automatic generation of the SQL expression, using a dictionary,
-where the key names must be match with the table field name. The order is 
+where the key names must be match with the table field names. The order is 
 indifferent. In this case there is not geometry field:</p>
 <pre><code>d={"description": "water well", "depth": 12.15}
 fieldsAndValues=pg.FieldsAndValues(d=d)
@@ -714,8 +829,8 @@ Values:  ['water well', 12.15]
 </li>
 <li>
 <p>The last print <code>[{'gid': 1}]</code> shows the returned value. The returned value
-can be an empty list, or several fields values, 
-specified in the parameter <code>str_fields_returning="gid"</code>, in a dictionary.</p>
+can be an empty list, or several fields values in a dictionary. The values
+to be returned are specified in the string parameter <code>str_fields_returning="gid"</code>.</p>
 </li>
 </ul>
 <h4 id="example-with-a-postgis-geometry-field">Example with a PostGIS geometry field</h4>
@@ -741,7 +856,7 @@ Values:  ['water well', 'POINT(100 200)']
 </code></pre>
 <h4 id="example-generating-the-expressions-manually">Example generating the expressions manually</h4>
 <p>This example manually generates the expressions using the class 
-<a href="../reference/#src.pgOperations.pgOperations.FieldsAndValuesBase" target="_blank">FieldsAndValuesBase</a>,
+<a href="../reference/#src.pgOperations.pgOperations.FieldsAndValuesBase">FieldsAndValuesBase</a>,
 so you are free to write the SQL sentence, for more complicated cases.</p>
 <pre><code>fieldsAndValuesBase=pg.FieldsAndValuesBase(
     str_field_names="depth, description, geom", 
@@ -759,7 +874,7 @@ Values:  [12.15, 'water well', 'POINT(100 200)']
 [{'gid': 3}]
 </code></pre>
 <h3 id="update">Update</h3>
-<p>To update a table you can use the method <a href="../reference/#src.pgOperations.pgOperations.PgOperations.pgUpdate" target="_blank">PgOperations.pgUpdate</a>. In the next sections you will
+<p>To update a table you can use the method <a href="../reference/#src.pgOperations.pgOperations.PgOperations.pgUpdate">PgOperations.pgUpdate</a>. In the next sections you will
  see different use cases.</p>
 <h4 id="example-using-a-python-dictionary">Example using a Python dictionary</h4>
 <p>The following example updates al the rows where <code>gid=1</code>, and only updates the field <code>geom</code> because the
@@ -787,7 +902,7 @@ New field values:  ['POINT(300 300)']
 Number of rows updated:  1
 1
 </code></pre>
-<p>The returned value was <code>1</code> therefore only one row has been updated.</p>
+<p>The returned value was <code>1</code>, therefore only one row has been updated.</p>
 <h4 id="example-generating-the-sql-expression-manually">Example generating the SQL expression manually</h4>
 <p>Next example updates the fields <code>description</code> and <code>geom</code>, generating the expression 
 manually:</p>
@@ -813,18 +928,16 @@ Number of rows updated:  1
 </code></pre>
 <p>One row has been updated.</p>
 <h3 id="select">Select</h3>
-<p>To select you can use the method <a href="../reference/#src.pgOperations.pgOperations.PgOperations.pgSelect" target="_blank">PgOperations.pgSelect</a>. In the next listing you will
+<p>To select you can use the method <a href="../reference/#src.pgOperations.pgOperations.PgOperations.pgSelect">PgOperations.pgSelect</a>. In the next listing you will
 find an example.</p>
 <p>The pgSelect method returns the selected rows as list of dictionaries, or as list of tuples. 
 Each element of the list represents a selected row.</p>
 <p>Example:</p>
-<pre><code>whereClause=pg.WhereClause(where_clause='gid &gt; %s and gid &lt; %s', where_values_list=[0, 3])
+<pre><code>whereClause=pg.WhereClause(where_clause='gid &gt; %s and gid &lt; %s', 
+                            where_values_list=[0, 3])
 resp=pgo.pgSelect(table_name="d.points", 
-                  string_fields_to_select='gid,depth,description,st_astext(geom)',
-                  whereClause=whereClause,
-                  print_query=False,
-                  orderBy='gid desc'
-                  )
+            string_fields_to_select='gid,depth,description,st_astext(geom)',
+            whereClause=whereClause, print_query=False, orderBy='gid desc')
 print(resp)
 </code></pre>
 <p>The result of the previous command is:</p>
@@ -838,7 +951,6 @@ Num of selected rows:  2
     {'gid': 2, 'depth': None, 'description': 'water well', 'st_astext': 'POINT(-673652.1897909392 202.79364615897794)'}, 
     {'gid': 1, 'depth': 12.15, 'description': 'water well updated', 'st_astext': 'POINT(-673449.3960596526 304.1894476513122)'}
 ]
-Num of selected rows:  2
 </code></pre>
 <p>In the above example, if you set the parameter <code>get_rows_as_dicts</code> to false, 
 the result is a list of tuples:</p>
@@ -848,7 +960,7 @@ the result is a list of tuples:</p>
 ]
 </code></pre>
 <h3 id="delete">Delete</h3>
-<p>To delete you can use the method <a href="../reference/#src.pgOperations.pgOperations.PgOperations.pgDelete" target="_blank">PgOperations.pgDelete</a>. In the next listing you will
+<p>To delete you can use the method <a href="../reference/#src.pgOperations.pgOperations.PgOperations.pgDelete">PgOperations.pgDelete</a>. In the next listing you will
 find an example.</p>
 <pre><code>whereClause=pg.WhereClause(where_clause='gid &lt; %s', where_values_list=[3])
 resp=pgo.pgDelete(table_name="d.points",whereClause=whereClause,print_query=False)
@@ -863,15 +975,21 @@ Number of rows deleted:  2
 2
 </code></pre>
 <h2 id="other-utilities">Other utilities</h2>
+<h3 id="create-table">Create table</h3>
+<p>To create the new table you can use 
+the <a class="autorefs autorefs-internal" href="../reference/#src.pgOperations.pgOperations.PgOperations.pgCreateTable">PgOperations.createTable</a> utility.</p>
+<pre><code>r=pgo.pgCreateTable(table_name_with_schema="d.customers",
+    fields_definition="gid serial, name varchar, img varchar",
+    delete_table_if_exists= True,print_query=False)
+</code></pre>
 <h3 id="delete-rows-and-files">Delete rows and files</h3>
 <p>This utility deletes the selected rows, and their associated files in the hard disk.
 The rows have to have a field with the file names to delete. The file names
 can contain an absolute path, or a relative path. It is possible to complete
 relative paths with the parameter <code>base_path</code>.</p>
-<p>see the method <a href="../reference/#src.pgOperations.pgOperations.PgOperations.pgDeleteWithFiles" target="_blank">PgOperations.pgDeleteWithFiles</a> for mor details about the parameters.</p>
+<p>see the method <a href="../reference/#src.pgOperations.pgOperations.PgOperations.pgDeleteWithFiles">PgOperations.pgDeleteWithFiles</a> for mor details about the parameters.</p>
 <p><strong>This method only has been tested in Linux systems</strong>.</p>
-<p>As an example a new table is needed. To create the new table you can use 
-the <a class="autorefs autorefs-internal" href="../reference/#src.pgOperations.pgOperations.PgOperations.pgCreateTable">PgOperations.createTable</a> utility.</p>
+<p>As an example a new table is needed.</p>
 <pre><code>r=pgo.pgCreateTable(table_name_with_schema="d.customers",
         fields_definition="gid serial, name varchar, img varchar",
         delete_table_if_exists= True,print_query=False)
@@ -893,7 +1011,7 @@ To delete all rows and all images:</p>
 <pre><code>r=pgo.pgDeleteWithFiles(table_name="d.customers",field_name_with_file_name="img",
     base_path="/home/user/app/media/customers/img")
 </code></pre>
-<p>In the previous command as the <code>whereClause</code> is None, all the rows are selected.</p>
+<p>In the previous example as the <code>whereClause</code> is None, all the rows are selected to be deleted.</p>
 <p>If in the folder <code>/home/user/app/media/customers/img</code> there are 
 only the files <code>image1.jpg</code> and <code>image2.jpg</code>, the result will be:</p>
 <pre><code>{'numOfRowsDeleted': 3, 'deletedFileNames': ["image1.jpg", "image2.jpg"], 
@@ -901,14 +1019,14 @@ only the files <code>image1.jpg</code> and <code>image2.jpg</code>, the result w
 'base_path': '/home/user/app/media/customers/img'}
 </code></pre>
 <h3 id="get-table-field-names">Get table field names</h3>
-<p>This utility returns the table field names as a string or as a list. Besides
+<p>This utility returns the table field names, as a string, or as a list. Besides
 if the table has a geometry field, e.g. <code>geom</code>, this utility can return this
 field name as <code>geom</code>, <code>st_astext(geom)</code>, <code>st_asgeojson(geom)</code>, <code>st_transform(st_asgeojson(geom),givenEPSG)</code>, or <code>st_transform(st_astext(geom),givenEPSG)</code>. The objetive is, the output of
 this function, could be used as input for the parameter <code>list_fields_to_select</code>
-of the methods <a href="../reference/#src.pgOperations.pgOperations.PgOperations.pgSelect" target="_blank"> PgOperations.pgSelect</a> and <a href="../reference/#src.pgOperations.pgOperations.PgOperations.pgUpdate" target="_blank"> PgOperations.pgUpdate</a> </p>
+of the methods <a href="../reference/#src.pgOperations.pgOperations.PgOperations.pgSelect"> PgOperations.pgSelect</a> and <a href="../reference/#src.pgOperations.pgOperations.PgOperations.pgUpdate"> PgOperations.pgUpdate</a> </p>
 <p>It is very common not to update all the field values, as some of them are automatically set
-by the database, because they have default values, commonly <code>serials</code> or timestapm field <code>types</code>.
-Because that this utility allow to remove some fields of the output. Next example returns the
+by the database, because they have default values, commonly <code>serials</code>, or <code>timestamp</code> field types.
+Because that, this utility allow to remove some fields of the output. Next example returns
 all field names in a list:</p>
 <pre><code>r=pgo.pgGetTableFieldNames('d.points')
 </code></pre>
@@ -918,7 +1036,7 @@ Query:  SELECT column_name FROM information_schema.columns WHERE table_schema=%s
 Fields list: ['gid', 'description', 'depth', 'geom']
 Field names:  ['gid', 'description', 'depth', 'geom']
 </code></pre>
-<p>Example to select all the field names, except <code>description</code>, getting the geometry as geojson and
+<p>Example to get all the field names, except <code>description</code>, getting the geometry as geojson and
 getting the result as string: </p>
 <pre><code>gf=pg.SelectGeometryFormat()
 gfo=pg.SelectGeometryFieldOptions(geom_field_name='geom',
@@ -935,8 +1053,7 @@ Fields list: ['gid', 'depth', 'st_asgeojson(st_transform(geom,25831))']
 Field names:  gid,depth,st_asgeojson(st_transform(geom,25831))
 </code></pre>
 <p>Next example shows how to use the output of this method as input of 
-<a href="../reference/#src.pgOperations.pgOperations.PgOperations.pgSelect" 
-target="_blank"> PgOperations.pgSelect</a>:</p>
+<a href="../reference/#src.pgOperations.pgOperations.PgOperations.pgSelect"> PgOperations.pgSelect</a>:</p>
 <pre><code>gf=pg.SelectGeometryFormat()
 gfo=pg.SelectGeometryFieldOptions(geom_field_name='geom',select_geometry_format=gf.geojson, epsg_to_reproject='25831')
 fieldNames=pgo.pgGetTableFieldNames('d.points',gfo,list_fields_to_remove=['description'],returnAsString=True)
@@ -958,10 +1075,8 @@ Num of selected rows:  1
 Selection result:  [{'gid': 3, 'depth': 12.15, 'st_asgeojson': '{"type":"Point","crs":{"type":"name","properties":{"name":"EPSG:25831"}},"coordinates":[-673652.189790939,202.793646159]}'}]
 </code></pre>
 <h3 id="table-exists">Table exists</h3>
-<p>Returns True or False, depending on if the table exists in the database or not.
-table_name_with_schema: table name included the schema, e.g. "d.boundary". 
-See the <a href="../reference/#src.pgOperations.pgOperations.PgOperations.pgTableExists" 
-target="_blank"> PgOperations.pgTableExists</a> method documentation for more details:</p>
+<p>Returns True or False, depending whether or not the table exists.
+See the <a href="../reference/#src.pgOperations.pgOperations.PgOperations.pgTableExists"> PgOperations.pgTableExists</a> method documentation for more details:</p>
 <p>Example:</p>
 <pre><code>res=pgo.pgTableExists(table_name_with_schema='d.points')
 print('Table exists: ', res)
@@ -973,11 +1088,10 @@ Query: SELECT EXISTS (SELECT 1 FROM   information_schema.tables WHERE  table_sch
 Table exists:  True
 </code></pre>
 <h3 id="value-exists-in-field">Value exists in field</h3>
-<p>It is very common check if a value exists in a column. For example in the case of
+<p>It is very common to check if a value exists in a column. For example in the case of
 users, or emails. This function returns <code>True</code> or <code>False</code>,
- depending whether or not if a value exists in a column. 
-See the <a href="../reference/#src.pgOperations.pgOperations.PgOperations.pgValueExists" 
-target="_blank"> PgOperations.pgValueExists</a> method documentation for more details:</p>
+ depending whether or not the value exists a column. 
+See the <a href="../reference/#src.pgOperations.pgOperations.PgOperations.pgValueExists"> PgOperations.pgValueExists</a> method documentation for more details:</p>
 <p>Example:</p>
 <p>res=pgo.pgValueExists(table_name_with_schema='d.points',field_name='gid',field_value= 3)</p>
 <p>Result:</p>
@@ -989,11 +1103,10 @@ Value exists: True
 </code></pre>
 <h3 id="manage-counters">Manage counters</h3>
 <p>This module has a class, called 
-<a href="../reference/#src.pgOperations.pgOperations.PgCounters" 
-target="_blank"> PgCounters</a> to manage counters. See the class method
+<a href="../reference/#src.pgOperations.pgOperations.PgCounters"> PgCounters</a> to manage counters. See the class method
 documentations to get more details.</p>
-<p>Use the method <a href="../reference/#src.pgOperations.pgOperations.PgCounters.addCounter" 
-target="_blank"> PgCounters.addCounter</a> to create a counter:</p>
+<h4 id="add-a-counter">Add a counter</h4>
+<p>Use the method <a href="../reference/#src.pgOperations.pgOperations.PgCounters.addCounter"> PgCounters.addCounter</a> to create a counter:</p>
 <pre><code>counter_name = 'c1'
 c=pg.PgCounters(pgo)
 c.addCounter(counter_name,counter_name + ' description')
@@ -1008,8 +1121,11 @@ pgInsert #pgInsert call to insert in the table counters.counters
 Query:  insert into counters.counters (counter_name,counter_description) values (%s,%s)
 Values:  ['c1', 'c1 description']
 </code></pre>
-<p>Use the method <a href="../reference/#src.pgOperations.pgOperations.PgCounters.incrementCounter" 
-target="_blank"> PgCounters.incrementCounter</a> to increment a counter:</p>
+<p>As you can see the table <code>counters.counters</code> is created to have a registry of the created counters.
+The table contains the counter name, and one description. All the counters are <code>sequences</code> created
+in the schema <code>counters</code>, therefore their names must be unique.</p>
+<h4 id="increment-a-counter">Increment a counter</h4>
+<p>Use the method <a href="../reference/#src.pgOperations.pgOperations.PgCounters.incrementCounter"> PgCounters.incrementCounter</a> to increment a counter:</p>
 <pre><code>v1=c.incrementCounter(counter_name)
 print('Returned value 1: ',v1)
 </code></pre>
@@ -1019,8 +1135,8 @@ Query:  select nextval(%s)
 Current counter value:  1
 Returned value 1:  1
 </code></pre>
-<p>Use the method <a href="../reference/#src.pgOperations.pgOperations.PgCounters.getCounterValue" 
-target="_blank"> PgCounters.getCounterValue</a> to get the counter value:</p>
+<h4 id="get-the-current-counter-value">Get the current counter value</h4>
+<p>Use the method <a href="../reference/#src.pgOperations.pgOperations.PgCounters.getCounterValue"> PgCounters.getCounterValue</a> to get the counter value:</p>
 <pre><code>r1=c.getCounterValue(counter_name)
 print('Returned value 3: ',r1)
 </code></pre>
@@ -1030,8 +1146,8 @@ Quer: y select last_value from counters.c1
 Current counter value:  1
 Returned value 3:  1
 </code></pre>
-<p>Use the method <a href="../reference/#src.pgOperations.pgOperations.PgCounters.getAllCounters" 
-target="_blank">PgCounters.getAllCounters</a> to get all the counters, its description, and values:</p>
+<h4 id="get-all-the-counter-name-description-and-values">Get all the counter name, description and values</h4>
+<p>Use the method <a href="../reference/#src.pgOperations.pgOperations.PgCounters.getAllCounters">PgCounters.getAllCounters</a> to get all the counters, its description, and its values:</p>
 <pre><code>r=c.getAllCounters()
 print('All counters: ',r)
 </code></pre>
@@ -1045,8 +1161,8 @@ All counters:  [
     {'gid': 18, 'counter_name': 'c2', 'counter_description': 'c2 description', 'value': 2}
 ]
 </code></pre>
-<p>Use the method <a href="../reference/#src.pgOperations.pgOperations.PgCounters.deleteCounter" 
-target="_blank">PgCounters.deleteCounter</a> to delete a counter:</p>
+<h4 id="delete-a-counter">Delete a counter</h4>
+<p>Use the method <a href="../reference/#src.pgOperations.pgOperations.PgCounters.deleteCounter">PgCounters.deleteCounter</a> to delete a counter:</p>
 <pre><code>n=c.deleteCounter('c1')
 </code></pre>
 <p>And the results are the following:</p>
@@ -1060,6 +1176,8 @@ deleteCounter #the deleteCounter prints start here
 Query drop sequence if exists counters.c1
 Sequences deleted:  1
 </code></pre>
+<p>As you can see in the previous listing, the associated counter sequence has being deleted,
+as well as its corresponding row in the table <code>counters.counters</code>.</p>
 
 
 
