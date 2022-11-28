@@ -1,18 +1,7 @@
 # -*- coding: utf-8 -*-
 '''
 #pgOperations module
-
-A simple and light weight module to perform operations in PostgreSQL and PostGIS
-
-author: Gaspar Mora-Navarro
-
-Universitat Politècnica de València
-
-Department of Cartographic Engineering Geodesy and Photogrammetry
-
-Higher Technical School of Geodetic, Cartographic and Topographical Engineering
-
-joamona@cgf.upv.es
+A simple and light weight module to perform operations in PostgreSQL and PostGIS.
 
 This module facilitates to perform the most common operations: 
 insert, delete, update, select, create and delete databases.
@@ -20,9 +9,10 @@ insert, delete, update, select, create and delete databases.
 The class methods receive Python dictionaries, create the SQL sentences and perform the operations.
 The methods are able to work also with PostGIS geometries, using WKT representations.
 
-This library depends of the psycopg2 library (http://initd.org/psycopg/).
+This library depends on the 
+<a href="https://www.psycopg.org/" target="_blank">psycopg2</a> library.
 
-This library uses Python >= 3
+This library requires Python >= 3
 '''
 
 from typing import Union, Any
@@ -41,7 +31,8 @@ class PgConnection():
     used to perform the transactions in the database.
     
     This class do not do anything interesting, but an instance of this class, or an instance of 
-    PgConnection, or PgConnect, is necessary to initialize the class PgOperations, which have the 
+    [PgConnect][src.pgOperations.pgOperations.PgConnect], are necessary to initialize 
+    the class [PgOperations][src.pgOperations.pgOperations.PgOperations], which have the 
     real utilities of this library.
         
     This class is the base class for the class [PgConnect][src.pgOperations.pgOperations.PgConnect], 
@@ -72,10 +63,11 @@ class PgConnection():
     def disconnect(self):
         """Closes the cursor and the connection. 
         
-        It is important to close the connections because PostgreSQL has a limited number
-        of connections alive limited. In PostgreSQL, this number is configurable and also, there is a garbage
-        collector to close unused connections, but the recommendation is to close the connection once 
-        you have finished.
+        It is important to close the connections because the number
+        of connections alive are limited. 
+        In PostgreSQL, this number is configurable, and also there is
+         a garbage collector to close unused connections, but the recommendation 
+        is to close the connection once you have finished to release resources.
         
         The recommendation is use the connection to perform all the transactions you need, 
         commit the changes and close the Psycopg2 cursor and the connection.
@@ -110,7 +102,8 @@ class PgConnect(PgConnection):
 
         Examples:
             >>> from pgOperations import pgOperations as pg
-            >>> pgc=pg.PgConnect(database='pgoperationstest', user="postgres", password="postgres", host="localhost",port=5432)
+            >>> pgc=pg.PgConnect(database='pgoperationstest', user="postgres", 
+            >>>     password="postgres", host="localhost",port=5432)
             >>> pgo=pg.PgOperations(pgConnection=pgc)
             >>> pgc.disconnect()
 
@@ -132,7 +125,7 @@ class PgConnect(PgConnection):
 class PgDatabases():
     """
     Class to create and delete databases. To use this class it is necessary to have
-    an instance of the class PgConnect
+    an instance of the class PgConnect.
     """
     pgConnect: PgConnect = None
 
@@ -237,12 +230,12 @@ class GeometryFieldOptions():
     
     With this class you can set the geometry field name, the current SRC of the geometry, 
     and the new SRC, in case you want ro reproject it. The SRC must be a
-    <a href="https://epsg.io/" target="_blank">EPSG</a> code.
+    <a href="https://epsg.io/" >EPSG</a> code.
     """
     geom_field_name=None, 
     epsg=None
     epsg_to_reproject=None
-    def __init__(self,geom_field_name: str = 'geom',epsg: Union[str, int]=None,
+    def __init__(self,epsg: Union[str, int], geom_field_name: str = 'geom',
          epsg_to_reproject: Union[str, int]=None):
         """Constructor
 
@@ -252,9 +245,8 @@ class GeometryFieldOptions():
                     epsg='25830',epsg_to_reproject="25831")
         
         Args:
-
-            geom_field_name: Table geometry field name.
             epsg: Current EPSG SRC code of the geometry.
+            geom_field_name: Table geometry field name.
             epsg_to_reproject: On inserting or getting the geometry, the
                 geometry will be reprojected to this new SRC.
         """
@@ -335,12 +327,17 @@ class FieldsAndValues(FieldsAndValuesBase):
         """Constructor               
         
         Args:
-            d: Dictionary key-value, where the keys are the name fields and the values the value fields of a table,
+            d: Dictionary key-value, where the keys are the names of the table fields, 
+                and the values the values of the fields,
                 e.g. {"depth":12.15, "description":"water well", "geom":"LINESTRING(100 200, 200 200)"}.
                 It is not necessary to have a geometry field in the dictionary.
                 If there is a geometry field, the value must be in 
                 <a href="https://en.wikipedia.org/wiki/Well-known_text_representation_of_geometry" 
-                    target="_blank">WKT</a> format.
+                    target="_blank">WKT</a> format. The other details of the geometry,
+                    as the SRC of the geometry, must be specified in
+                    an instance of the 
+                    [GeometryFieldOptions][src.pgOperations.pgOperations.GeometryFieldOptions] class,
+                    in the parameter geometryFieldOptions of this contructor.
             list_fields_to_remove: list with the dictionary keys to exclude of the SQL expression.
                 The corresponding field for the row in the table will not be affected by the insertion,
                 or update.
@@ -350,8 +347,10 @@ class FieldsAndValues(FieldsAndValuesBase):
                 Set to None if you do not want to remove any field.
                 If the field to remove is not in the dictionary `d` any error will be raised.
             geometryFieldOptions: If there is a geometry field in the table,
-                    this object gives the details of the geometry: the field name, the SRC,
-                    and the new SRC, in case of a reprojections be required.
+                    a [GeometryFieldOptions][src.pgOperations.pgOperations.GeometryFieldOptions] 
+                    class instance must be created, to give the details of the geometry: 
+                    the field name, the SRC,
+                    and the new SRC, in case of a reprojection be required.
         """
         self.__dict_to_string_fields_and_vector_values(
             d, list_fields_to_remove, geometryFieldOptions)
@@ -454,14 +453,15 @@ class WhereClause():
 class PgOperations():
     """
     Perform the most common operations with PostGIS: insert, delete, update and select. 
-    To initialise this class it is necessary a  
-    [PgConnection][src.pgOperations.pgOperations.PgConnection], 
+    To initialise this class it is necessary a 
+    [PgConnection][src.pgOperations.pgOperations.PgConnection],
     or a [PgConnect][src.pgOperations.pgOperations.PgConnect] instance. 
 
-    All the next examples use the variable pgc (a PgConnect instance), the database
-    and the table d.points created in the The 
-    <a href="../tutorials/#create-a-table" target="_blank">Create table</a> 
-    example. The d.points table has the fields `gid`, `description`, `deph` and `geom`.
+    All the next examples use the variable `pgc`, the database,
+    and the table `d.points`, created in the The 
+    <a href="../tutorials/#create-a-table" >Create table</a> 
+    section. The `d.points` table has the fields:
+     `gid`, `description`, `deph` and `geom`.
     """
     
     query: str = None
@@ -496,7 +496,7 @@ class PgOperations():
             str_fields_returning: str = None, print_query: bool=False)->list:
         """Inserts a row in a table.
 
-        See examples of use in  <a href="../tutorials/#insert" target="_blank">Examples of insert</a>.
+        See examples of use in  <a href="../tutorials/#insert" >Examples of insert</a>.
 
         Args:
             table_name: Table name to insert the row.
@@ -510,7 +510,7 @@ class PgOperations():
                 may be is interesting for debugging.
                 
         Returns:
-            An empty list `[]` or a list with a dictionary, e.g. `[{'gid': 25, 'date': '2022-11-13'}]`, depending of the value of the parameter ´str_fields_returning´.
+            An empty list or a list with a dictionary, depending of the value of the parameter ´str_fields_returning´
         """
 
         conn=self.pgConnection.conn
@@ -554,7 +554,7 @@ class PgOperations():
         """
         Updates a table
         
-        See examples of use in  <a href="../tutorials/#update" target="_blank">Examples of update</a>.
+        See examples of use in  <a href="../tutorials/#update" >Examples of update</a>.
 
         Args:
 
@@ -597,10 +597,8 @@ class PgOperations():
     
     def pgDelete(self, table_name: str, whereClause: WhereClause = None, print_query: bool=False) -> int:
         """
-        Delete rows from a table. Example of use:
-        
-        See an example of use in  
-        <a href="../tutorials/#delete" target="_blank">Example of delete</a>.
+        Delete rows from a table. See an example of use in
+        <a href="../tutorials/#delete" >Example of delete</a>.
 
         Args:
 
@@ -634,7 +632,7 @@ class PgOperations():
 
     def pgDeleteWithFiles(self, table_name: str, field_name_with_file_name: str,
             whereClause: WhereClause=None, base_path: str=None, 
-            print_query: bool=False) -> dict:
+            print_query: bool=False)->dict:
         """
         **This method only has been tested in Linux systems**
 
@@ -646,7 +644,7 @@ class PgOperations():
         Before the rows be deleted, the files are deleted.
 
         See an example of use in 
-        <a href="../tutorials/#delete-rows-and-files" target="_blank">Delete rows and files</a>.
+        <a href="../tutorials/#delete-rows-and-files" >Delete rows and files</a>.
         
         Args:
 
@@ -659,13 +657,8 @@ class PgOperations():
             print_query: for debugging purposes. If true will print the SQL sentences and values.
 
         Returns:
-
-            Dictionary with the following information: 
-                number of rows deleted, list of file names deleted, 
-                list of filenames not deleted, the base path, e.g. 
-                {'numOfRowsDeleted': 3, 'deletedFileNames': [], 
-                'notDeletedFilenames': ['image1.jpg', 'image2.jpg', 'image3.jpg'], 
-                'base_path': '/home/joamona/temp/img'}
+            Dictionary with the following information. Number of rows deleted, list of file names deleted, list of filenames not deleted, the base path.
+        
         """
         r=self.pgSelect(table_name=table_name, 
             string_fields_to_select=field_name_with_file_name, 
@@ -687,7 +680,7 @@ class PgOperations():
         """
         If you have a row stored in a dictionary, this function
         deletes a file in the file system. The the filename must be one of the values
-        of the dictionary. **This method has been texted only in Linux systems**.
+        of the dictionary. **This method has only been texted in Linux systems**.
 
         Examples:
 
@@ -702,14 +695,15 @@ class PgOperations():
             field_name_with_file_name: field in the table which contains the file name. 
             base_path: If the `field_name_with_file_name` field contains relative paths,
                     or only the file name, you can specify in this parameter the
-                    base path to complete the absolute path to the file. Does not
-                    matters if the base_path ends in the character `/` or not, 
+                    base path to complete the absolute path to the file. It does not
+                    matter if the base_path ends in the character `/` or not, 
                     e.g. `/home/user/media/images/`, or  `/home/user/media/images`.
         
-        Returns: 
+        
+        Returns:
             True if the file could be deleted. Otherwise False.
         """
-        
+
         if base_path is not None:
             #print(base_path[len(base_path)-1])
             if base_path[len(base_path)-1]== '/':
@@ -734,7 +728,7 @@ class PgOperations():
         """
         Select rows of a table.
 
-        See examples of use in  <a href="../tutorials/#select" target="_blank">Examples of select</a>.
+        See examples of use in  <a href="../tutorials/#select" >Examples of select</a>.
         
         Args:
             table_name: table name included the schema, e.g. "d.linde". 
@@ -756,12 +750,9 @@ class PgOperations():
                 may be is interesting for debugging.
 
         Returns:
-
-            An empty list, if there is not any row selected.
-            A list of dictionaries, each dictionary 
-                representing a selected row, if `get_rows_as_dicts` is True. 
-            A list of lists, each list 
-                representing a selected row, if `get_rows_as_dicts` is True.
+            An empty list, if there is not any row selected.  
+            A list of dictionaries, each dictionary representing a selected row, if `get_rows_as_dicts` is True.  
+            A list of lists, each list representing a selected row, if `get_rows_as_dicts` is True.
         """
         cursor=self.pgConnection.cursor
 
@@ -835,7 +826,8 @@ class PgOperations():
         'geom', 'st_astext(geom)', 'st_asgeojson(geom)', 'st_transform(st_asgeojson(geom),EPSG),
         or 'st_transform(st_astext(geom),EPSG). The objetive with this is the output of
         this function serves to input for the parameter `list_fields_to_select`
-        of the method pgSelect.
+        of the methods <a href="#src.pgOperations.pgOperations.PgOperations.pgSelect">pgSelect</a>, 
+        or <a href="#src.pgOperations.pgOperations.PgOperations.pgUpdate">pgUpdate</a>.
 
         Examples:
             >>>gf=pg.SelectGeometryFormat()
@@ -853,9 +845,9 @@ class PgOperations():
             returnAsString: 
             print_query: 
 
-        Returns: 
-            If `returnAsString` is False, a list of the field names the table, 
-            If `returnAsString` is False, a string with field names of the a table 
+        Returns:
+            If `returnAsString` is `False`, a list of the field names the table. 
+            If `returnAsString` is `True`, a string with field names of the a table 
         """
  
         consulta="SELECT column_name FROM information_schema.columns WHERE table_schema=%s and table_name = %s";
@@ -932,7 +924,7 @@ class PgOperations():
 
             >>>res=pgo.pgTableExists(table_name_with_schema='d.points')
     
-        Returns: 
+        Returns:
             True or False, depending on if the table exists in the database or not.
         """
 
@@ -950,9 +942,9 @@ class PgOperations():
     def pgCreateTable(self,table_name_with_schema:str, fields_definition:str, 
         delete_table_if_exists: bool=False, print_query: bool= False)->bool:
         """
-        Creates a table. If the table already exists this method can delete it.
-        Returns True if the table has been created, or false if the table
-        already existed.
+        Creates a table. If the table already exists this method can delete it before.
+        Returns `True` if the table has been created, or `False` if the table
+        already existed, and the parameter `delete_table_if_exists` was set to `False`.
         
         See an example of use in 
         <a href="../tutorials/#delete-rows-and-files">Delete rows and files</a>.
@@ -966,10 +958,12 @@ class PgOperations():
         Args:
 
             table_name_with_schema: The table name, including the schema, e.g. 'public.customers'.
-            fields_definition: String with the fields definitions. If any field name stars
-                with a number, or has a space, must be quoted, e.g. 
-                'gid serial primary key, natcode varchar,nameunit varchar,"{fieldName}" varchar'.format(
-                    fieldName='25_utm') 
+            fields_definition: String with the fields definitions. If any field name starts
+                with a number, or has a space, must be double quoted, e.g. 
+                
+                    >>>fields = 'gid serial primary key, natcode varchar,
+                        nameunit varchar,"{fieldName}" varchar'.format(
+                        fieldName='25_utm') 
             delete_table_if_exists: If True will delete the table before create it. If False,
                 if the table exists Psycopg2 will raise an error.
             print_query: For debugging purposes. If true the delete and create table
@@ -1014,8 +1008,8 @@ class PgOperations():
             print_query: For debugging purposes. If True will print 
                 the query and values in the function.
         
-        Returns: 
-            True or False
+        Returns:
+            True or False, depending on if the value exists.
         """
 
         cons="SELECT exists (SELECT {0} FROM {1} WHERE {2} = %s LIMIT 1)".format(field_name, table_name_with_schema, field_name)
@@ -1040,16 +1034,17 @@ class PgCounters:
     Counters are created as sequences, and the sequences are represented
     in the database as tables. The current value of the counters are get
     with the sentence `select last_value from sequence_name`.
-    All the counters, or sequences, are stored in the schema counters.
+    All the counters, or sequences, are stored in the schema `counters`.
 
     Counters name should be given without the schema name.
-    The schema `counters` ant the table `counters.counters` are automatically 
+    The schema `counters` and the table `counters.counters` are automatically 
     created first time a counter is added. 
     The table `counters.counters` contains the counters name and a description.
-    This table is used by the method `getAllCounters`, which lists all the counters,
-    its description and its current value.
+    This table is used by the method `getAllCounters`, which lists all the counters name,
+    description, and current value.
 
-    Examples of use in <a href="../tutorials/#manage-counters">Manage counters</a>.
+    You can find examples of use in the 
+    <a href="../tutorials/#manage-counters">Manage counters</a> section.
     """
     counter_schema='counters'
     counters_table='counters.counters'
@@ -1076,10 +1071,13 @@ class PgCounters:
         if they do not exist. Adds to the table `counters.counters` a row with
         the counter name and the counter description.
 
-        If the counter already exists, an exception will be raised.
+        If the counter already exist, an exception will be raised.
 
         If the schema `counters` or the table `counters.counters` already
         exists this function does not raise any exception.
+
+        You can find an example of use in the 
+        <a href="../tutorials/#add-a-counter">Add a counter</a> section.
 
         Args:
             counter_name: Counter name without schema, e.g. 'visits'.
@@ -1116,6 +1114,8 @@ class PgCounters:
         in the table `counters.counters`.
         If the counter does not exist, this method do not raises any exception.
 
+        You can find an example of use in the 
+        <a href="../tutorials/#delete-a-counter">Delete a counter</a> section.
         Args:
             counter_name: Counter name without schema, e.g. 'visits'.
             print_query: For debug purposes. In true prints the queries and
@@ -1147,6 +1147,8 @@ class PgCounters:
 
         Counters are incremented even the transaction is rolled back.
 
+        You can find an example of use in the 
+        <a href="../tutorials/#increment-a-counter">Increment a counter</a> section.
         Args:
 
             counter_name: Counter name without schema, e.g. 'visits'.
@@ -1172,6 +1174,10 @@ class PgCounters:
         """
         Returns the current counter value.
 
+        You can find an example of use in the 
+        <a href="../tutorials/#get-the-current-counter-value">
+            Get the current counter value</a> section.</a>
+
         Args:
 
             counter_name: Counter name without schema, e.g. 'visits'.
@@ -1196,6 +1202,9 @@ class PgCounters:
         """
         Returns all the counters name, description and current values in a list of
         dictionaries.
+
+        <a href="../tutorials/#get-all-the-counter-name-description-and-values">
+            Get all the counter name, description and values</a> section.</a>
 
         Args:
 
