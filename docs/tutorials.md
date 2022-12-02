@@ -6,26 +6,35 @@
 - PostgreSQl >= 10
 
 ## Installation
-It is good practice always use Python [virtual environments](https://docs.python.org/3/library/venv.html) to install new Python libraries. Navigate to the folder where you want to create the virtual environment, for example the 'venvs' folder, and type:
-
-    python3 python3 -m venv pgOperations
-   
-Activate the virtual environment to install the modules:
-   
-    source pgOperations/bin/activate
 
 ###Windows
 
 Use [pip](https://pypi.org/project/pip/) to install the packages in the virtual environment:
 
-    (pgOperations)$pip install psycopg2
-    (pgOperations)$pip install pgOperations
+    pip install psycopg2
+    pip install pgOperations
 
 ### Linux distributions
+In Linux it is good practice always use Python [virtual environments](https://docs.python.org/3/library/venv.html) to install new Python libraries. To use Python virtual environments you must install the `venv` library:
+
+> **_NOTE:_**  Make sure, in the bellow listings, to replace the `X` of `python3.X` for your Python distribution version.
+> 
+
+    sudo apt-get install python3.X-venv
+   
+Navigate to the folder where you want to create the virtual environment, for example the `venvs` folder, and type:
+
+    python3 python3.X -m venv pgOperations
+
+Activate the virtual environment to install the packages:
+   
+    source pgOperations/bin/activate
+
+Install the psycopg2 dependency:
+
+    (pgOperations)$pip install psycopg2
 
 In Linux distributions may be the installation of `psycopg2` fail. In this cases you must install the following before:
-
-> **_NOTE:_**  Make sure, in the bellow listing, to replace the `X` of `python3.X` for your Python version.
 
     sudo apt-get install libpq-dev -y 
     sudo apt-get install build-essential -y 
@@ -35,7 +44,6 @@ Now you can proceed with the installation of `psycopg2`.
 
     (pgOperations)$pip install psycopg2
         Collecting psycopg2
-        Using cached psycopg2-2.9.5.tar.gz (384 kB)
         Building wheels for collected packages: psycopg2
         Building wheel for psycopg2 (setup.py) ... error
         ...
@@ -48,7 +56,7 @@ And install `pgOperations`:
 
     (pgOperations)$pip install pgOperations
 
-You are ready to use the library to edit data in PostgreSQL easier.
+You are ready to use the library to edit data in PostgreSQL and PostGIS.
 
 ## Summary
 
