@@ -3,7 +3,7 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 [project]
 name = "pgOperations"
-version = "0.0.2"
+version = "0.0.3"
 keywords = ["PostgreSQL", "Psycopg2", "PostGIS", "Utilities"]
 authors = [{ name="Gaspar Mora-Navarro", email="joamona@cgf.upv.es" },]
 description = "Simple tool to perform the most common operations in PostgreSQL and PostGIS with Psycopg2. Builds the SQL queries from Pyhton dictionaries."
