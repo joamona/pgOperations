@@ -24,7 +24,7 @@ In Linux it is good practice always use Python [virtual environments](https://do
    
 Navigate to the folder where you want to create the virtual environment, for example the `venvs` folder, and type:
 
-    python3 python3.X -m venv pgOperations
+    python3.X -m venv pgOperations
 
 Activate the virtual environment to install the packages:
    
