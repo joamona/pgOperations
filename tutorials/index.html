@@ -794,22 +794,29 @@
 <li>PostgreSQl &gt;= 10</li>
 </ul>
 <h2 id="installation">Installation</h2>
-<p>It is good practice always use Python <a href="https://docs.python.org/3/library/venv.html">virtual environments</a> to install new Python libraries. Navigate to the folder where you want to create the virtual environment, for example the 'venvs' folder, and type:</p>
-<pre><code>python3 python3 -m venv pgOperations
-</code></pre>
-<p>Activate the virtual environment to install the modules:</p>
-<pre><code>source pgOperations/bin/activate
-</code></pre>
 <h3 id="windows">Windows</h3>
 <p>Use <a href="https://pypi.org/project/pip/">pip</a> to install the packages in the virtual environment:</p>
-<pre><code>(pgOperations)$pip install psycopg2
-(pgOperations)$pip install pgOperations
+<pre><code>pip install psycopg2
+pip install pgOperations
 </code></pre>
 <h3 id="linux-distributions">Linux distributions</h3>
-<p>In Linux distributions may be the installation of <code>psycopg2</code> fail. In this cases you must install the following before:</p>
+<p>In Linux it is good practice always use Python <a href="https://docs.python.org/3/library/venv.html">virtual environments</a> to install new Python libraries. To use Python virtual environments you must install the <code>venv</code> library:</p>
 <blockquote>
-<p><strong><em>NOTE:</em></strong>  Make sure, in the bellow listing, to replace the <code>X</code> of <code>python3.X</code> for your Python version.</p>
+<p><strong><em>NOTE:</em></strong>  Make sure, in the bellow listings, to replace the <code>X</code> of <code>python3.X</code> for your Python distribution version.
+</p>
 </blockquote>
+<pre><code>sudo apt-get install python3.X-venv
+</code></pre>
+<p>Navigate to the folder where you want to create the virtual environment, for example the <code>venvs</code> folder, and type:</p>
+<pre><code>python3 python3.X -m venv pgOperations
+</code></pre>
+<p>Activate the virtual environment to install the packages:</p>
+<pre><code>source pgOperations/bin/activate
+</code></pre>
+<p>Install the psycopg2 dependency:</p>
+<pre><code>(pgOperations)$pip install psycopg2
+</code></pre>
+<p>In Linux distributions may be the installation of <code>psycopg2</code> fail. In this cases you must install the following before:</p>
 <pre><code>sudo apt-get install libpq-dev -y 
 sudo apt-get install build-essential -y 
 sudo apt-get install python3.X-dev -y
@@ -817,7 +824,6 @@ sudo apt-get install python3.X-dev -y
 <p>Now you can proceed with the installation of <code>psycopg2</code>.</p>
 <pre><code>(pgOperations)$pip install psycopg2
     Collecting psycopg2
-    Using cached psycopg2-2.9.5.tar.gz (384 kB)
     Building wheels for collected packages: psycopg2
     Building wheel for psycopg2 (setup.py) ... error
     ...
@@ -829,7 +835,7 @@ sudo apt-get install python3.X-dev -y
 <p>And install <code>pgOperations</code>:</p>
 <pre><code>(pgOperations)$pip install pgOperations
 </code></pre>
-<p>You are ready to use the library to edit data in PostgreSQL easier.</p>
+<p>You are ready to use the library to edit data in PostgreSQL and PostGIS.</p>
 <h2 id="summary">Summary</h2>
 <p>There are mainly three classes whose methods are useful: <a href="../reference/#src.pgOperations.pgOperations.PgOperations">PgOperations</a>, to edit data, <a href="../reference/#src.pgOperations.pgOperations.PgCounters">PgCounters</a>, to manage counters and <a href="../reference/#src.pgOperations.pgOperations.PgDatabases">PgDatabases</a>, to manage databases. The rest of the classes are auxiliary classes
 to arrange the parameters that the useful classes need.</p>
